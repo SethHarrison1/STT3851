@@ -1,0 +1,138 @@
+---
+title: "Modeling Home Prices - Project 1"
+author: 'Seth Harrison'
+date: 'Last Compiled: `r format(Sys.time(), "%b %d, %Y")`'
+output: bookdown::html_document2
+---
+
+```{r, label = "SETUP", echo = FALSE, results= 'hide', message = FALSE, warning = FALSE}
+library(knitr)
+knitr::opts_chunk$set(comment = NA, fig.align = 'center', fig.height = 5, fig.width = 5, prompt = FALSE, 
+                      tidy = FALSE, warning = FALSE, message = FALSE)
+```
+
+**Directions:  Answer all questions with complete sentences.  When reporting numbers from computer output, use inline coding.**
+
+# Data
+
+* Read the data from [http://jse.amstat.org/datasets/homes76.dat.txt](http://jse.amstat.org/datasets/homes76.dat.txt) into an R object named `HP`.  [1 pt.]
+
+* Remove columns 1, 7, 10, 15, 16, 17, 18, and 19 from `HP` and store the result back in `HP`. [1 pt.]
+
+* Name the columns in `HP` `price`, `size`, `lot`, `bath`, `bed`, `year`, `age`, `garage`, `status`, `active`, and `elem`, respectively. [1 pt.]
+
+* Show the first six rows of `HP`. [1 pt.]
+
+```{r, label = "readin", message=FALSE}
+library(readr)
+HP <- read_tsv("http://jse.amstat.org/datasets/homes76.dat.txt")
+HP <- HP[-c(1, 7, 10, 15, 16, 17, 18, 19)]
+names(HP) <- c("price", "size", "lot", "bath", "bed", "year", "age", "garage", "status", "active", "elem")
+head(HP)
+```
+
+* Use the function `datatable` from the `DT` package to display the data from `HP`.  [1 pt.]
+
+```{r, label = "datatable"}
+library(DT)
+datatable(HP)
+```
+
+* What are the units for `price` and `size`? [1 pt.]
+
+**The unit for price is hundreds of thousands of dollars and the units for size are thousands of square feet.**
+
+# Models
+
+* Use the function `stepAIC` from the `MASS` package to create models using forward selection and backward elimination.  Store the model from backward elimination in an object named `mod.be` and the model from forward selection in an object named `mod.fs`. [2 pts.]
+
+
+```{r}
+library(MASS)
+modNull <- lm(price ~ 1, HP)
+mod0 <- lm(price ~ ., HP)
+mod.be <- stepAIC(mod0, direction = "backward")
+mod.fs <- stepAIC(modNull, direction = "forward")
+```
+
+* Which model (`mod.be` or `mod.fs`) do you believe is better and why?  Consider the residuals, $R^2_a$, residual standard error, and AIC for both models when answering the question. [2 pts.]
+
+```{r, label = "comparisons", fig.width = 12}
+# Your code here
+library(car)
+summary(mod.be)
+summary(mod.fs)
+residualPlot(mod.be)
+residualPlot(mod.fs)
+```
+
+
+**I believe that the mod.fs is a better fit because of the $R^2$ value of .5401 and the residual plot is better centered around zero**
+
+* Create a model and name it `mod1` that regresses `price` on all of the variables in `HP` with the exception of `status` and `year`.  Produce a summary of `mod1` and graph the residuals using `residualPlots` from the `car` package.  Based on your residual plots, what might you do to `mod1`?  Report the adjusted $R^2$ value for `mod1`. [3 pts.]
+
+```{r, fig.width = 12, fig.height = 12}
+mod1 <- lm(price ~ size + lot + bath + bed + age + garage + active + elem, HP)
+residualPlots(mod1)
+summary(mod1)
+boxCox(mod1)
+mod1T <- lm(price ~ size + lot + bath + bed + age + garage + active + elem, HP)
+residualPlots(mod1T)
+```
+
+**mod1 has an adjusted r-squared value of .4411.**
+
+* Create a new model (`mod2`) by adding `bath:bed` and `age`$^2$ to `mod1`. Report the adjusted $R^2$ value for `mod2`. [2 pts.]
+
+```{r}
+mod2 <- lm(price ~ size + lot + bath + bed + age + garage + active + elem + bath:bed + I(age^2), HP)
+summary(mod2)
+```
+
+**The new model has an adjusted $R^2$ value of .5068**
+
+* Create a new model (`mod3`) by using only `edison` and `harris` from `elem` from `mod2`.  Hint: use `I()`.  Your estimated coefficients should agree with those in the [article](https://www.tandfonline.com/doi/full/10.1080/10691898.2008.11889569). Conduct a nested F-test (`anova(mod3, mod2`)).  Does your p-value agree with the one presented in the article?  Interpret this test. Report the adjusted $R^2$ value for `mod3`. [4 pts.]
+
+
+```{r}
+mod3 <- lm(price ~ size + lot + bath + bed + age + garage + active + bath:bed + I(age^2) + I(elem == "edison") + I(elem == "harris"), HP)
+anova(mod3, mod2)
+```
+
+**The p-value is 0.659, the same as the article and this means we fail to reject the null. Edison and Harris parameters are zero.**
+
+
+* Compute the training mean square prediction error for all five of the models.  Which model has the smallest training mean square prediction error?  Do you think this model will also have the smallest test mean square prediction error? [3 pts.]
+
+```{r}
+mean(summary(mod.fs)$residuals^2)
+mean(summary(mod.be)$residuals^2)
+mean(summary(mod1)$residuals^2)
+mean(summary(mod2)$residuals^2)
+mean(summary(mod3)$residuals^2)
+```
+
+**Model number 2 has the smallest training MSE and though model 3 would likely have the lowest test MSE because it is a slightly modified version of mod2 to reduce error.**
+
+# Predictions
+
+* Use `mod3` to create a 95% prediction interval for a home with the following features: 1879 feet, lot size category 4, two and a half baths, three bedrooms, built in 1975, two-car garage, and near Parker Elementary School. [3 pts.]
+
+```{r}
+predict(mod3, newdata = data.frame(age = 0.5, size = 1.879, lot=4, bath= 2.1, bed = 3, year = 1975, garage = 2, elem = "parker", active = 1), interval = "prediction", level = .95)
+```
+
+**The interval predicts the price of the house to be between $193,657.50 and $366,836.70.**
+
+
+* **EXTRA CREDIT:**  Run the following code:
+
+```{r, eval = FALSE, fig.width = 12, fig.height = 12}
+library(effects)
+plot(allEffects(mod2))
+plot(effect("bath*bed", mod2))
+plot(effect("bath*bed", mod2, xlevels=list(bed=2:5)))
+plot(effect("bath*bed", mod2, xlevels=list(bath=1:3)))
+```
+
+Explain what each set of graphs is showing.
