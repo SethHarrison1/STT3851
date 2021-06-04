@@ -1,0 +1,19 @@
+---
+title: "Hypothesis Testing"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+H0: MuL-MuR = 0
+HA: MuL - MuR =/= 0
+
+
+```{r}
+LS <- c(21,22,19,20,20,22,23,20,20)
+RS <- c(22, 21, 20, 22, 22, 20)
+t.test(LS, RS)
+pt(-.65792, 12.686) * 2
+```

@@ -1,0 +1,9 @@
+---
+title: "LateX practice"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+$S^2=\sum_{i=1}^n \frac{(x_i-\bar_x)^2}{n-1}$

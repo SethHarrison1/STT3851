@@ -1,0 +1,43 @@
+---
+title: "CInterval_practice"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ISLR)
+library(ggplot2)
+```
+
+```{r}
+age <- c(19, 25, 34, 60)
+xbar <- mean(age)
+S <- sd(age)
+c(xbar, S)
+CT <- qt(.995, 3)
+CT
+CI <- xbar + c(-1, 1)*CT*S/sqrt(4)
+CI
+t.test(age, conf.level = .99)$conf
+```
+
+```{r}
+Credit
+names(Credit)
+ggplot(Credit, aes(x = Limit, y = Balance)) + geom_point() + geom_smooth(method = "lm")
+mod1 <- lm(Balance ~ Limit:Income, Credit)
+summary(mod1)
+MSE <- anova(mod1)[2,3]  #Mean Standard Error/Numerator for Standard Error of Beta Hat1
+MSE
+DEN <- sum((Credit$Limit - mean(Credit$Limit))^2)  #Denominator for Standard Error of Beta hat1
+DEN
+SEbetaHat1 <- sqrt(MSE / DEN)
+SEbetaHat1
+CT <- qt(.975, 398)
+CT
+SEB1 <- summary(mod1)$coef[2,2]
+SEB1
+confint(mod1, level = .95)
+
+```
+

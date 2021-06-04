@@ -1,0 +1,23 @@
+---
+title: "Class 9/23/19"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(ISLR)
+library(MASS)
+credit <- Credit
+mod2 <- lm(Rating ~ Limit + Cards + Married + Student + Education, data = credit)
+mod1 <- lm(Rating ~ ., data = credit)
+mod <- stepAIC(mod1, direction = "forward")
+modd <- stepAIC(mod1, direction = "backward")
+mod
+modd
+summary(mod2)
+26.23208566 + (12000 * .06677359) + (4.85207519 * 2) + 2.1732013 + (8 * -.2598468)
+```

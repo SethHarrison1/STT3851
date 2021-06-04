@@ -1,0 +1,74 @@
+---
+title: "Modeling multiple variables"
+output: html_document
+---
+
+```{r}
+library(MASS)
+library(ggplot2)
+boston <- Boston
+```
+
+```{r}
+ggplot(boston, aes(x = tax, y = medv)) +
+  geom_point()
+ggplot(boston, aes(x = dis, y = medv)) +
+  geom_point()
+ggplot(boston, aes(x = age, y = medv)) +
+  geom_point()
+ggplot(boston, aes(x = ptratio, y = medv)) +
+  geom_point()
+ggplot(boston, aes(x = black, y = medv)) +
+  geom_point()
+ggplot(boston, aes(x = lstat, y = medv)) +
+  geom_point()
+ggplot(boston, aes(x = rm, y = medv)) +
+  geom_point()
+ggplot(boston, aes(x = nox, y = medv)) +
+  geom_point()
+ggplot(boston, aes(x = indus, y = medv)) +
+  geom_point()
+ggplot(boston, aes(x = zn, y = medv)) +
+  geom_point()
+ggplot(boston, aes(x = crim, y = medv)) +
+  geom_point()
+cor(boston$medv, boston)
+
+```
+
+```{r}
+model <- lm(medv ~ rm + ptratio + lstat + dis, data = boston)
+model
+summary(model)
+median(boston$medv)
+
+X <- model.matrix(model)
+dim(X)
+betahat <- solve(t(X) %*% X) %*% t(X) %*% Boston$medv
+betahat
+sig <- summary(model)$sigma
+varCovMatrix <- sig ^ 2 * solve(t(X) %*% X)
+dim(t(X) %*% X)
+varCovMatrix
+se <- sqrt(diag(varCovMatrix))
+se
+ts <- betahat / se
+ts
+pt(-14.23, 501) * 2
+pvalues <- pt(abs(ts), 501, lower = FALSE) * 2
+pvalues
+```
+
+\begin{equation}
+CI_{1-\alpha} = [\hat\beta_{1} - t_{1 - \alpha / 2 ; n - p} * SE(\hat\beta_1), \hat\beta_1 + t_{1 - \alpha / 2 ; n - p} * SE(\hat\beta_1)]
+\end{equation}
+
+\begin{equation}
+CI_.95(\hat\beta_1) = [-.66544 - t_{1 - .05 / 2 ; 501} * .04675, -.66544 + t_{1 - .05 / 2 ; 501} * .04675] 
+\end{equation}
+
+```{r}
+betahat[2] + c(-1, 1) * qt(.975, 501) * se[2]
+confint(model)
+```
+

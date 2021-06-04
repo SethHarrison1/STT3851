@@ -1,0 +1,27 @@
+---
+title: "EyeColorHeight"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+```
+
+
+```{r}
+eyeColor <- c("blue", "blue", "green", "brown", "green", "green", "blue", "brown", "green", "gray", "green", "green", "brown", "brown", "green", "brown", "brown", "brown")
+height <- c(69, 69, 76, 73, 67, 73, 72, 70, 68, 71, 67, 70, 75, 71, 67, 69, 60, 64)
+DF <- data.frame(eyeColor, height)
+eyeColorBar <- ggplot(DF, aes(x = eyeColor)) + geom_bar(fill = "pink", color = "black")
+eyeColorBar
+heightHist <- hist(height, col = "mistyrose")
+heightHist
+boxplotHeight <- boxplot(height, col = "orchid3", horizontal = TRUE)
+boxplotHeight
+
+```
+

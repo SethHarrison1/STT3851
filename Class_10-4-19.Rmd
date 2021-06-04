@@ -1,0 +1,49 @@
+---
+title: "Class 10/4/19"
+output: html_document
+---
+
+```{r}
+library(PASWR2)
+library(broom)
+head(SIMDATAXT)
+library(ggplot2)
+ggplot(SIMDATAXT, aes(x = x1, y = y)) + geom_point() + geom_smooth(method = "lm")
+mod <- lm(y ~ x1, SIMDATAXT)
+modA <- augment(mod)
+head(modA)
+ggplot(modA, aes(x = x1, y = .resid)) + geom_point() + geom_smooth()
+summary(mod)
+modT <- lm(y ~ I(x1^.5), SIMDATAXT)
+summary(modT)
+modTA <- augment(modT)
+modTA
+ggplot(modTA, aes(x = I.x1.0.5., y = .resid)) + geom_point()
+ggplot(SIMDATAXT, aes(y = y, x = x1^.5)) + geom_point()
+plot(modT, which = 1)
+library(car)
+residualPlots(modT)
+residualPlots(mod)
+plot(y ~ x2, SIMDATAXT)
+mod2 <- lm(y ~ x2, SIMDATAXT)
+residualPlots(mod2)
+mod2T <- lm(y ~ I(x2^2), SIMDATAXT)
+residualPlots(mod2T)
+mod3 <- lm(y ~ x3, SIMDATAXT)
+residualPlots(mod3)
+mod3T <- lm(y ~ I(1 / x3), SIMDATAXT)
+residualPlots(mod3T)
+ggplot(SIMDATAST, aes(x = x1, y1)) +
+  geom_point() +
+  theme_bw()
+modS <- lm(y1 ~ x1, SIMDATAST)
+residualPlots(modS)
+boxCox(modS, lambda = seq(-.2, .2, by = .01))
+modST <- lm(log(y1) ~ x1, SIMDATAST)
+residualPlots(modST)
+modS2 <- lm(y2 ~ x2, SIMDATAST)
+residualPlots(modS2)
+boxCox(modS2)
+modS2T <- lm(I(1/y2) ~ x2, SIMDATAST)
+residualPlots(modS2T)
+```

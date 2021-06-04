@@ -1,0 +1,42 @@
+---
+title: "Class_11-18-2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(PASWR2)
+library(tidyverse)
+library(ggplot2)
+data("VIT2005")
+mod1 <- lm(totalprice ~ area, VIT2005)
+ggplot(VIT2005, aes(x = area, y = totalprice)) + geom_point() + theme_bw() + geom_smooth(method = "lm")
+glimpse(VIT2005)
+table(VIT2005$category)
+VIT2005 <- VIT2005 %>%
+  mutate(newcategory =
+           case_when(category == "2A" ~ "good",
+                     category == "2B" ~ "good",
+                     category == "3A" ~ "good",
+                     category == "3B" ~ "fine",
+                     category == "4A" ~ "poor",
+                     category == "4B" ~ "poor",
+                     category == "5A" ~ "poor",))
+VIT2005$newcategory <- factor(VIT2005$newcategory)
+```
+
+```{r}
+library(caret)
+dummies_model <- dummyVars(totalprice ~ ., VIT2005)
+trainData_mat <- predict(dummies_model, newdata = VIT2005)
+trainData <- data.frame(trainData_mat)
+str(trainData)
+```
+
+```{r}
+
+```
+
