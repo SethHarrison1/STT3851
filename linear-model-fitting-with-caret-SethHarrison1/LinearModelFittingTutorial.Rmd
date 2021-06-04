@@ -1,0 +1,651 @@
+---
+title: "Fitting Regression Models to Body Fat Data"
+output: 
+  bookdown::html_document2: 
+    highlight: espresso
+    theme: spacelab
+author: "Seth Harrison"
+date: 'Last compiled: `r format(Sys.time(), "%B %d, %Y")`'
+bibliography: 
+  - packages.bib
+  - bmi.bib
+  - BMI.bib
+css: MyLab.css
+---
+
+```{r label = "setup", include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", comment = NA, message = FALSE, warning = FALSE)
+library(caret)
+```
+
+```{r, results = "hide", echo = FALSE, message = FALSE}
+PackagesUsed <- c("tidyverse", "caret", "rpart", "rmarkdown", "bookdown", 
+                  "plotly", "ggplot2", "knitr", "plotly", "glmnet", "dplyr",
+                  "data.table", "MASS", "caretEnsemble", "ranger",
+                  "randomForest", "leaps", "corrplot","GGally", "mfp", 
+                  "partykit", "gbm", "RANN", "e1071", "rpart.plot", "corrplot")
+knitr::write_bib(PackagesUsed, file = "./packages.bib")
+```
+
+____________________
+
+<div id="instructions">
+Type complete sentences to answer all questions inside the `answer` tags provided in the R Markdown document.  Round all numeric answers you report inside the answer tags to four decimal places.  Use inline `R` code to report numeric answers inside the `answer` tags (i.e. do not hard code your numeric answers).
+</div>
+
+____________________
+
+In the article _Fitting Percentage of Body Fat to Simple Body Measurements_, @johnson_fitting_1996 uses the data at [http://jse.amstat.org/datasets/fat.dat.txt](http://jse.amstat.org/datasets/fat.dat.txt) provided to him by Dr. A. Garth Fischer in a personal communication on October 5, 1994, as a multiple linear regression activity with his students.  A subset of the variables at [http://jse.amstat.org/datasets/fat.dat.txt](http://jse.amstat.org/datasets/fat.dat.txt) is available in the R package **mfp** by @R-mfp and the data set is used frequently in the text _Statistical Regression and Classification_ by @matloff_statistical_2017.  
+
+The purpose of this activity is to have the reader create several regression models to predict the body fat of males. Load a cleaned version of the data available from [https://raw.githubusercontent.com/alanarnholt/MISCD/master/bodyfatClean.csv](https://raw.githubusercontent.com/alanarnholt/MISCD/master/bodyfatClean.csv) into your `R` session using the `read.csv()` function.  Use the `head()` function to view the first six rows of the data frame `bodyfatClean`.
+
+_____________
+
+```{r}
+bodyFatClean <- read.csv("https://raw.githubusercontent.com/alanarnholt/MISCD/master/bodyfatClean.csv")
+```
+
+
+___________
+    
+1. Use the `glimpse()` function from the `dplyr` package written by @R-dplyr to view the structure of `bodyfatClean`.
+
+```{r}
+library(dplyr)
+glimpse(bodyFatClean)
+```
+
+_________
+
+
+Now that you have seen the structure of the data and have studied the research question, answer the following questions.
+
+2. How many observations and variables are in `bodyfatClean`?
+
+```{r}
+# Type your code and comments inside the code chunk
+#
+```
+
+<div id="answer">
+There are 18 variables and 251 observations.
+
+
+</div>
+
+___________
+
+3. In the regression setting, the variable that we want to predict is called the response variable. What is the name of the response variable in your case?
+
+
+<div id="answer">
+The response variable is brozek_C.
+        
+
+</div>
+
+____________
+        
+4. In the regression setting, the variable(s) that we use to predict the response variable is(are) called the explanatory or predictor variable(s). How many predictor variable(s) are available to use in this data set? 
+
+
+<div id="answer">
+There are 22 predictor variables available.
+        
+
+</div>
+
+____________
+
+5. How many of the predictor variables are numerical and how many of them are categorical?
+
+
+<div id="answer">
+All of the predictors are numerical.
+        
+
+</div>
+
+_________
+
+# Partitioning the Data
+
+When building a predictive model with a sufficiently large data set, it is common practice to hold out some fraction (usually less than 50%) of the data as a test set. It is difficult to provide a general rule for the size of the `training` and `testing` sets as the ideal split depends on the signal to noise ratio in the data [@hastie_elements_2009].
+
+Use the `creatDataPartition()` function from the `caret` package to partition the data in to `training` and `testing`. 
+
+For illustration purposes, the `Boston` data set from the __MASS__ package written by @R-MASS is used to illustrate various steps in predictive model building. The `Boston` help file indicates the data set consists of 506 observations on 14 different variables for houses in Boston collected in 1978. To open the `Boston` help file, type `?Boston` at the R
+prompt once the __MASS__ package has been loaded. The goal here is to predict the median house price (`medv`) in Boston. The Boston data set is divided into a training set containing roughly 80% of the observations and a testing set containing roughly 20% of the observations. Before calling the `createDataPartition()` function, it is important to set a seed to ensure the data partition is reproducible.
+
+The arguments `y`, `p`, `list` and `times` can be used with the `createDataPartition()` function. These arguments represent a vector of outcomes (`Boston$medv`), the percentage of data that goes to training (`0.80`), should the results be in a list (`FALSE`) and the number of partitions to create (`1`) respectively. The result from using `createDataPartition()` is a vector of indices one can use to create the training set. 
+
+```{r}
+library(caret) # load the caret package
+library(MASS) # load MASS package
+set.seed(3178) # set seed for reproducibility
+
+trainIndexB <- createDataPartition(y = Boston$medv,
+                                  p = 0.80,
+                                  list = FALSE,
+                                  times = 1)
+
+trainingB <- Boston[trainIndexB, ]
+testingB <- Boston[-trainIndexB, ]
+
+dim(trainingB) # Check the dimension of the  training set
+
+dim(testingB) # Check the dimension of the testing set
+
+```
+
+_______________
+
+6.  Partition the data frame `bodyfatClean` into training and testing partitions where roughly 80% of the data is used for training and roughly 20% of the data is used for testing. To ensure reproducibility of the partition, use `set.seed(314)`. The response variable should be `brozek_C` (the computed brozek based on the reported density).
+
+```{r}
+set.seed(314) # set seed for reproducibility
+
+trainIndex <- createDataPartition(y = bodyFatClean$brozek_C,
+                                  p = 0.80,
+                                  list = FALSE,
+                                  times = 1)
+
+training <- bodyFatClean[trainIndex, ]
+testing <- bodyFatClean[-trainIndex, ]
+```
+
+
+__________________
+
+
+7. Use the `dim()` function to verify the sizes of the `training` and `testing` data sets.
+
+```{r}
+dim(training)
+dim(testing)
+```
+
+<div id="answer">
+The training data set has 203 objects and the testing data set has 48 objects, both have 18 variables.
+        
+
+</div>
+
+_____________________
+
+# Pre-Processing the Data
+
+Some algorithms work better when the predictors are on the same scale. This section considers the `preProcess()` function for the **caret** package to find potentially helpful transformations of the training predictors. Three different transformations are considered: `center`, `scale`, and `BoxCox`. A center transform computes the mean of a variable and subtracts the computed mean from each value of the variable. A scale transform computes the standard deviation of a variable and divides each value of the variable by the computed standard deviation. Using both a center and a scale transform standardizes a variable. That is, using both center and scale on a variable creates a variable with a mean of 0 and a standard deviation of 1. When all values of a variable are positive, a `BoxCox` transform will reduce the skew of a variable, making it more Gaussian. 
+
+The following `R` Code applies a `center`, `scale`, and `BoxCox` transform to all the predictors in `trainingB` (the training set for the Boston data) and stores the results in `pp_trainingB`. The computed transformations are applied to both the `trainingB` and the `testingB` data sets using the `predict()` function with the results stored in the objects `trainingTransB` and `testingTransB`, respectively. Note that in the Boston data set the response (`medv`) is the last column ($14^{\text{th}}$) of the training data frame and is removed before pre-processing with `trainingB[ , -14]`.
+
+```{r}
+pp_trainingB <- preProcess(trainingB[ , -14],
+                          method = c("center", "scale", "BoxCox"))
+pp_trainingB
+trainingTransB <- predict(pp_trainingB, trainingB)
+testingTransB <- predict(pp_trainingB, testingB)
+```
+
+_________________________
+
+Your turn to work with the `bodyfatClean` data frame now.
+
+8. Provide the column number of `bodyfatClean` where `brozek_C` is stored.
+
+```{r}
+# Type your code and comment inside the code chunk
+#
+```
+
+
+<div id="answer">
+brozek_C is stored in the 14th column.
+        
+
+</div>
+
+___________
+
+9. Use the `preProcess()` function to transform the predictors that are in the `training` data set crated in Problem 6. Specifically, pass a vector with "center", "scale", and "BoxCox" to the `method =` argument of `preProcess()`. Make sure not to transform the response (`brozek_C`).  Store the results in an object named `pp_training`.
+
+
+```{r}
+pp_training <- preProcess(training[ , -14],
+                          method = c("center", "scale", "BoxCox"))
+```
+
+_______________
+
+10. Use the `predict()` function to construct a transformed training set and a transformed testing set. Name the new transformed data sets `trainingTrans` and `testingTrans`, respectively.
+
+
+```{r}
+trainingTrans <- predict(pp_training, training)
+testingTrans <- predict(pp_training, testing)
+```
+
+____________
+
+# $k$-Fold Cross Validation
+
+$k$-fold cross validation divides the data into $k$ subsets and performs the holdout method $k$ times. Specifically, one of the $k$ subsets is used as the test set and the other $k − 1$ subsets are put together to form a training set. The average MSE across all $k$ trials is computed and is denoted $CV_{(k)}$ 
+
+# Resampling with caret
+
+The `trainControl()` function from **caret** specifies the resampling procedure to be used inside the `train()` function. Resampling procedures include $k$-fold cross-validation (once or repeated), leave-one-out cross-validation, and bootstrapping. The following `R` code creates a `myControlB` object that will signal a 10-fold repeated five times cross-validation scheme (50 resamples in total) to the `train()` function for the `Boston` data set. Note that the argument `savePredictions = "final"` saves the hold-out predictions for the optimal tuning parameters.
+
+```{r}
+myControlB <- trainControl(method = "repeatedcv",
+                          number = 10,
+                          repeats = 5,
+                          savePredictions = "final")
+```
+
+___________
+
+11. Use the `trainControl()` function to define the resampling method (repeated cross-validation), the number of resampling iterations (10), and the number of repeats or complete sets to generate (5), storing the results in the object `myControl`. 
+
+```{r}
+myControl <- trainControl(method = "repeatedcv",
+                          number = 10,
+                          repeats = 5,
+                          savePredictions = "final")
+```
+
+____________
+
+
+# Building Linear Models
+
+
+## Least squares model
+
+Let's denote the response variable by $Y$ (always quantitative). $p$ predictor variables will be denoted by $X_1, X_2,\ldots, X_p$ (all quantitative). Some authors refer to the response variable as the dependent variable while the predictor variables are sometimes referred to as independent variables, explanatory variables, features or covariates.  The relationship between $Y$ and $X_1, X_2,\ldots, X_p$ will be expressed as
+
+\begin{equation}
+Y = f(X_1, X_2,\ldots, X_p) + \epsilon.
+(\#eq:genModel)
+\end{equation}
+
+
+In \@ref(eq:genModel) $f$ is some fixed but unknown function of $X_1, X_2,\ldots, X_p$, and $\epsilon$ is a random error term independent of $X_1, X_2,\ldots, X_p$ with mean zero. For predictive models, the goal is to estimate $f$ with $\hat{f}$ so that $\hat{Y} = \hat{f}(X_1, X_2,\ldots, X_p)$ yields accurate predictions for $Y$.  If one assumes $f$ is linear in $X_1, X_2,\ldots, X_p$, the model is expressed as the linear model as shown in \@ref(eq:regModel).
+
+\begin{equation}
+Y = f(X) = \beta_0 + \beta_1X_1 + \beta_2X_2 + \cdots + \beta_pX_p + \epsilon
+(\#eq:regModel)
+\end{equation}
+
+By assuming the functional form of $f$ is linear, the problem becomes one of finding estimates for the parameters $\beta_0, \beta_1, \ldots, \beta_p$ which is generally done with least squares. The least squares estimators are obtained by minimizing the sum of squared residuals (RSS), where
+
+\begin{equation}
+\text{RSS} = \sum_{i=1}^n(y_i-\hat{y}_i)^2, 
+(\#eq:rss)
+\end{equation}
+
+and  $\hat{y}_i = \hat\beta_0 + \hat\beta_1X_1 + \hat\beta_2X_2 + \cdots + \hat\beta_pX_p.$ 
+
+
+
+To fit a model with a particular algorithm, the name of the algorithm is given to the `method` argument of the `train()` function. The `train()` function accepts a formula interface provided the data is also specified in the function. Following R Code fits a linear model by regressing `medv` on all of the predictors in the training data set using the dot indicator which selects all predictors `(medv ∼ .)`. The preferred way to train a model is by passing the response vector to the `y` argument and a data frame of the predictors or a matrix of the predictors to the `x` argument of `train()`. Both approaches are shown in the below `R` code.
+
+```{r}
+# Here we used  method = "lm" to fit a Least Squares Regression model
+
+# Approach 1
+set.seed(31)
+mod_lm <- train(medv ~ .,
+                data = trainingTransB,
+                trControl = myControlB,
+                method = "lm")
+
+# Approach 2
+set.seed(31)
+mod_lm2 <- train(y = trainingTransB$medv,    # response
+                 x = trainingTransB[, -14],  # predictors
+                 trControl = myControlB,
+                 method = "lm")
+
+mod_lm2$results       # CV results
+mod_lm2$results$RMSE  # RMSE
+```
+
+The average root mean squared error (RMSE) of the 50 resamples is `r round(mod_lm2$results$RMSE, 4)`.
+
+```{r}
+summary(mod_lm2)  # summary of lm object
+```
+
+____________________
+
+
+12. Use the `train()` function with `method = "lm"` and assign the object `myControl` to the `trControl` argument of the `train()` function to fit a  least squares regression model where the goal is to predict body fat using the pre-processed data in `trainingTrans` created in Problem 10. Use `brozek_C` as the response and store the results of `train()` in `mod_lm`. Use `set.seed(42)` for reproducibility.  Use `mod_lm$results` to investigate the model with minimum RMSE. Use the `summary()` function to view the coefficient estimates of the final model.
+
+
+```{r}
+set.seed(42)
+mod_lm <- train(brozek_C ~ .,
+                data = trainingTrans,
+                trControl = myControl,
+                method = "lm")
+mod_lm$results
+summary(mod_lm)
+```
+
+________________________
+
+13.  Use the `corrplot()` function from the `corrplot` package written by @R-corrplot to identify predictors that may be linearly related in `trainingTrans`. Are any of the variables colinear? If so, remove the predictor that is least correlated to the response variable. Note that when `method = "number"` is used with `corrplot()`, color coded numerical correlations are displayed.
+
+```{r, fig.width=12, fig.height=12}
+library(corrplot)
+trainingTransC <- cor(trainingTrans)
+corrplot(trainingTransC, method = "number")
+```
+
+<div id="answer">
+`age_sq` and `age` appear to be colinear, as well as `abdomen_cm` and abdomen_wrist. `age_sq` and `abdomen_cm` are the least correlated so those will be removed.
+        
+
+</div>
+_______________________
+
+
+## Forward selection
+
+Forward selection starts with the null model (a model created from regressing the response on the intercept) then adds predictors one at a time to the model by regressing the response on all of the possible predictors one at a time and adding the predictor that makes the *RSS* as small as possible or that creates the largest $R^2$. This process continues until all variables have been added to the model or a criterion such as a p-value greater than some predetermined value (such as 0.20) tells the algorithm to stop adding variables to the model.
+
+__________________
+
+13. Use the `train()` function with `method = "leapForward"`, `tuneLength = 10` and assign the object `myControl` to the `trControl` argument of the `train()` function to fit a forward selection model where the goal is to predict body fat using the pre-processed data `trainingTrans` from Problem 10. Use `brozek_C` as the response variable and store the results of `train()` in `mod_FS`. Use `set.seed(42)` for reproducibility.  Do not include any predictors that are perfectly correlated. 
+
+    i. Use `mod_FS$results` to investigate the model that resulted in the minimum RMSE (final submodel). 
+    ii. Use `mod_FS$bestTune` to find out how many variable were selected in the final submodel (`nvmax`). 
+    iii. Use the `summary(mod_FS)` function and find the names of the variables selected in the final submodel with minimum RMSE.  (Hint: Go to the part the output under `Selection Algorithm: forward`, then look at the row which agrees with the `nvmax` from B. The variables with `"*"`s are the variables selected in the final submodel.) To find the actual coefficients, one can use `coef(mod_FS$finalModel, id = mod_FS$bestTune$nvmax)`.
+  
+  
+
+```{r, message = FALSE, warning = FALSE}
+set.seed(42)
+mod_FS <- train(y = trainingTrans$brozek_C,
+                x = trainingTrans[ , -c(6, 14, 16)],
+                method = "leapForward",
+                tuneLength = 10,
+                trControl = myControl)
+```
+
+A
+```{r}
+mod_FS$results
+```
+
+<div id="answer">
+The best model produced by forward selection has an RMSE of `r mod_FS$results[10,2]` 
+        
+
+</div>
+B
+```{r}
+mod_FS$bestTune
+```
+
+<div id="answer">
+There were eight variables selected in the final model.
+
+</div>
+C
+```{r}
+summary(mod_FS)
+coef(mod_FS$finalModel, id = mod_FS$bestTune$nvmax)
+```
+
+<div id="answer">
+The final model uses the variables `age`, `weight_lbs`,`neck_cm`, `chest_cm`, `wrist_cm`, `bmi_C`, `abdomen_wrist` and `am`.
+        
+
+</div>
+
+__________________
+
+16. Compute the RMSE for `mod_FS` using the `testing` data set.
+
+```{r}
+p <- predict(mod_FS, testingTrans)
+error <- p - bodyFatClean[["brozek_C"]]
+MRSEtfs <- sqrt(mean(error)^2)
+```
+
+<div id="answer">
+The RMSE for `mod_FS` using the `testing` data set is `r MRSEtfs`
+        
+
+</div>
+
+_________________________
+
+## Backward elimination
+
+Backward elimination starts with all predictors in the model (full model) and removes the least significant variables one at a time. The algorithm stops removing variables once a stopping criterion such as p-value less than some predetermined value (such as 0.05) for all predictors in the model is achieved. When the data has more predictors ($p$) than observations ($n$), backward elimination is no longer a viable approach since the least squares estimates are not unique. While forward selection is a viable approach when $n < p$, constrained regression is sometimes a better choice by increasing the bias for a relatively large reduction in variance.
+
+___________________
+
+17. Use the `train()` function with `method = "leapBackward"`, `tuneLength = 10` and assign the object `myControl` to the `trControl` argument of the `train()` function to fit a backward selection model where the goal is to predict body fat. Use `brozek_C` as the response and store the results of `train()` in `mod_BE`. Use `set.seed(42)` for reproducibility. Do not include any predictors that are perfectly correlated. 
+
+    i. Use `mod_BE$results` to investigate which model results in the minimum RMSE (final submodel). 
+    ii. Use `mod_BE$bestTune` to find out how many variable were selected to the final submodel (`nvmax`)? 
+    iii. Use the `summary(mod_BE)` function and find the names of the variables selected in the final submodel with minimum RMSE.  (Hint: Go to the part the output under `Selection Algorithm: backward`, then look at the row which agrees with the `nvmax` from B. The variables with `"*"`s are the variables selected in the final submodel.) To find the actual coefficients, one can use `coef(mod_BE$finalModel, id = mod_BE$bestTune$nvmax)`.
+    
+
+```{r}
+set.seed(42)
+mod_BE <- train(y = trainingTrans$brozek_C,
+                x = trainingTrans[ , -c(6, 14, 16)],
+                tuneLength = 10,
+                trControl = myControl,
+                method = "leapBackward")
+```
+
+
+```{r}
+mod_BE$results
+```
+
+<div id="answer">
+The best model produced by backward selection has an RMSE of `r mod_BE$results[10,2]` 
+
+</div>
+
+
+
+```{r}
+mod_BE$bestTune
+```
+
+<div id="answer">
+There were four variables selected in the final model.        
+
+</div>
+
+```{r}
+summary(mod_BE)
+coef(mod_BE$finalModel, id = mod_BE$bestTune$nvmax)
+```
+
+<div id="answer">
+The final model uses the variables `age`, `weight_lbs`,`neck_cm`, `chest_cm`, `wrist_cm`, `bmi_C`, `abdomen_wrist` and `am`.
+        
+
+</div>
+
+_______________________
+
+18. Compute the RMSE for `mod_BE` using the `testing` data set.
+
+```{r}
+p <- predict(mod_BE, testingTrans)
+error <- p - bodyFatClean[["brozek_C"]]
+MRSEbes <- sqrt(mean(error)^2)
+```
+
+<div id="answer">
+The RMSE for `mod_BE` using the `testing` data set is `r MRSEbes`
+        
+
+</div>
+
+_______________________
+
+## Constrained Regression
+
+Constrained regression shrinks the coefficient estimates towards zero while reducing their variance by adding a small amount of bias.  Two popular forms of constrained regression are ridge regression developed by @hoerl_ridge_1970 and the least absolute shrinkage and selection operator (lasso) developed by @tibshirani_regression_1996.
+
+
+### Ridge Regression
+
+The ridge regression coefficient estimates denoted by $\hat{\beta}^R$ are values that minimize
+\begin{equation}
+\sum_{i=1}^n(y_i-\hat{y}_i)^2 + \lambda\sum_{j=1}^p\beta^2_j = RSS + \lambda\sum_{j=1}^p\beta^2_j,
+(\#eq:ridgeE)
+\end{equation}
+
+where $\lambda \ge 0$ is a tuning parameter.  Similar to least squares, ridge regression seeks estimates that make RSS small.  However, the quantity $\lambda\sum_{j=1}^p\beta^2_j$ is small when the estimates of the $\beta$'s are close to zero.  That is, the quantity $\lambda\sum_{j=1}^p\beta^2_j$ is a shrinkage penalty. When $\lambda = 0$, there is no penalty and ridge regression will return the least squares estimates.  As $\lambda \rightarrow \infty$, the shrinkage penalty grows and the estimates of the $\beta$'s approach zero.  While least squares regression returns one set of estimates for the $\beta$'s, ridge regression returns a different set of estimates, $\hat{\beta}^R$, for each value of $\lambda$.  Selecting a good value of $\lambda$ can be accomplished with cross-validation.  The final model with ridge regression will include all $p$ predictors.  The penalty used by ridge regression is known as an $\ell_2$ norm.  Using an $\ell_1$ norm for the shrinkage penalty instead of an $\ell_2$ norm, results in the lasso model [@tibshirani_regression_1996].
+
+### LASSO
+
+The lasso coefficients, $\hat{\beta}^L$, minimize the quantity
+
+\begin{equation}
+\sum_{i=1}^n(y_i-\hat{y}_i)^2 + \lambda\sum_{j=1}^p|\beta_j| = RSS + \lambda\sum_{j=1}^p|\beta_j|
+(\#eq:lassoE)
+\end{equation}
+
+As with ridge regression, lasso returns a set of coefficient estimates, $\hat{\beta}^L$, for each value of $\lambda$.  Selecting a good value of $\lambda$ (known as tuning) can be accomplished with cross-validation.  Unlike the final ridge regression model which includes all $p$ predictors, the lasso model performs variable selection and returns coefficient estimates for only a subset of the original predictors making the final model easier to interpret.  Unfortunately, the lasso does not handle correlated variables very well [@hastie_statistical_2015].  The elastic net [@zou_regularization_2005] provides a compromise between ridge and lasso penalties. 
+
+### Elastic net
+
+The elastic net minimizes the quantity
+
+\begin{equation}
+\frac{1}{2}\sum_{i=1}^n(y_i-\hat{y}_i)^2 + \lambda\left[\frac{1}{2}(1 - \alpha)||\beta||_2^2 + \alpha||\beta||_1 \right] ,
+(\#eq:enetE)
+\end{equation}
+
+where $||\beta||_2^2$ is the $\ell_2$ norm of $\beta$, $\sum_{j=1}^p\beta^2_j$, and $||\beta||_1$ is the $\ell_1$ norm of $\beta$,  $\sum_{j=1}^p|\beta_j|$.  The penalty applied to an individual coefficient ignoring the value of $\lambda$ is
+
+\begin{equation}
+\frac{1}{2}(1 - \alpha)\beta_j^2 + \alpha|\beta_j|.
+(\#eq:penaltyENET)
+\end{equation}
+
+When $\alpha = 1$, the penalty in \@ref(eq:penaltyENET) reduces to the lasso penalty, and when $\alpha = 0$, the penalty in \@ref(eq:penaltyENET) reduces to the ridge penalty.  Selecting good values of $\alpha$ and $\lambda$ can be accomplished with cross-validation.
+
+The following `R` code fits a ridge regression model for `medv` using the `Boston` data with the `train()` function and `method = "glmnet"`. In the `expand.grid()` function, use the argument `alpha = 0` to specify a ridge model. `lambda = seq(0.01, 100, length = 100)` creates a user defined grid of `lambda` values used in tuning the ridge regression.
+
+
+```{r}
+# Type your code and comments inside the code chunk
+# Fit constrained model (elastic net)---Ridge model
+set.seed(42)
+mod_RidgeB <- train(y =trainingTransB$medv,  # response
+                x = trainingTransB[, -14],   # predictors 
+                trControl = myControlB, 
+                method = "glmnet",
+                tuneGrid = expand.grid(alpha =0, lambda = seq(0.01, 100, length = 100)))
+head(mod_RidgeB$results)
+min(mod_RidgeB$results$RMSE)
+mod_RidgeB$bestTune
+mod_RidgeB$bestTune$lambda
+mod_RidgeB$bestTune$alpha
+```
+
+
+`mod_Ridge$results` displays the `RMSE` for all the models for each value of the tuning parameter `lambda` (100 models in this case). `mod_RidgeB$bestTune` gives the `lambda` value of the model with the minimum `RMSE`.  In this case, the best `lambda` value was 0.01 which resulted the minimum `RMSE` of `r min(mod_RidgeB$results$RMSE)`.	
+
+_______________________
+
+
+19.  Use the `train()` function with `method = "glmnet"` to fit a constrained linear regression model named `mod_Ridge`. Assign the object `myControl` to the `trControl` argument of the `train()` function to fit a ridge  model where the goal is to predict body fat. Use `brozek_C` as the response and store the results of `train()` in `mod_Ridge`. Use `set.seed(42)` for reproducibility.  Do not include any predictors that are perfectly correlated.  
+
+```{r}
+# Type your code and comments inside the code chunk
+# Ridge model
+#
+#
+```
+
+
+
+_________________________
+
+
+19. Give the `lambda` value of the model with the minimum `RMSE`.
+
+```{r}
+# Type your code and comments inside the code chunk
+#
+```
+
+<div id="answer">
+Type your complete sentence answer here using inline R code and delete this comment.
+        
+
+</div>
+
+_______________
+
+20. Use the `train()` function with `method = "glmnet"` and assign the object `myControl` to the `trControl` argument of the `train()` function to fit a lasso model where the goal is to predict body fat. Use `brozek_C` as the response and store the results of `train()` in `mod_lasso`. In the `expand.grid()` function set the argument `alpha = 1` in order to obtain a lasso model. Use `set.seed(42)` for reproducibility. Do not include any predictors that are perfectly correlated. 
+
+```{r}
+# Type your code and comments inside the code chunk
+# Lasso model
+#
+```
+
+
+
+21. Give the `lambda` value of the model with the minimum `RMSE`. 
+
+```{r}
+# Type your code and comments inside the code chunk
+#
+```
+
+<div id="answer">
+Type your complete sentence answer here using inline R code and delete this comment.
+        
+
+</div>
+
+____________________
+
+22.  Use the `train()` function with `method = "glmnet"` and assign the object `myControl` to the `trControl` argument of the `train()` fucntion where the goal is to predict body fat using an elastic net model. Use `brozek_C` as the response and store the results of `train()` in `mod_EN`.  Use `set.seed(42)` for reproducibility. Do not include any predictors that are perfectly correlated. Use a custom tuning grid with arguments to `expand.grid()` of `alpha = seq(0.1, 0.5, length = 11)` and  `lambda = seq(0.01, 100, length = 20)`.
+
+```{r}
+# Type your code and comments inside the code chunk
+# Elastic net model
+#
+```
+
+_________________
+
+21. Report the `lambda` and `alpha` values of the model with the minimum `RMSE`. 
+
+```{r}
+# Type your code and comments inside the code chunk
+#
+```
+
+<div id="answer">
+Type your complete sentence answer here using inline R code and delete this comment.
+        
+
+</div>
+
+---------------
+
+<div id="license">
+This material is released under an [Attribution-NonCommercial-ShareAlike 3.0 United States](https://creativecommons.org/licenses/by-nc-sa/3.0/us/) license.  Original author: [Alan T. Arnholt](https://alanarnholt.github.io/)
+</div>
+      
+----------    
+    
+## References
