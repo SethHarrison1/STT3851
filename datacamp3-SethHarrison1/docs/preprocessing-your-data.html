@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 5 Preprocessing your data | Machine Learning Toolbox</title>
+  <meta name="description" content="The output format used for these personal notes is bookdown::gitbook." />
+  <meta name="generator" content="bookdown 0.15 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 5 Preprocessing your data | Machine Learning Toolbox" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="The output format used for these personal notes is bookdown::gitbook." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 5 Preprocessing your data | Machine Learning Toolbox" />
+  
+  <meta name="twitter:description" content="The output format used for these personal notes is bookdown::gitbook." />
+  
+
+<meta name="author" content="Seth Harrison" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="tuning-model-parameters-to-improve-performance.html"/>
+<link rel="next" href="selecting-models-a-case-study-in-churn-prediction.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Change this to your Title</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a></li>
+<li class="chapter" data-level="2" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html"><i class="fa fa-check"></i><b>2</b> Regression models: fitting them and evaluating their performance</a><ul>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#welcome-to-the-toolbox-video"><i class="fa fa-check"></i>Welcome to the Toolbox Video</a></li>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#in-sample-rmse-for-linear-regression"><i class="fa fa-check"></i>In-sample RMSE for linear regression</a></li>
+<li class="chapter" data-level="2.1" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#in-sample-rmse-for-linear-regression-on-diamonds"><i class="fa fa-check"></i><b>2.1</b> In-sample RMSE for linear regression on <code>diamonds</code></a><ul>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#exercise"><i class="fa fa-check"></i>Exercise</a></li>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#out-of-sample-error-measures-video"><i class="fa fa-check"></i>Out-of-sample error measures video</a></li>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#out-of-sample-rmse-for-linear-regression"><i class="fa fa-check"></i>Out-of-sample RMSE for linear regression</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#randomly-order-the-data-frame"><i class="fa fa-check"></i><b>2.2</b> Randomly order the data frame</a><ul>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#exercise-1"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#try-an-8020-split"><i class="fa fa-check"></i><b>2.3</b> Try an 80/20 split</a><ul>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#exercise-2"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#predict-on-test-set"><i class="fa fa-check"></i><b>2.4</b> Predict on test set</a><ul>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#exercise-3"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#calculate-test-set-rmse"><i class="fa fa-check"></i><b>2.5</b> Calculate test set RMSE</a><ul>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#exercise-4"><i class="fa fa-check"></i>Exercise</a></li>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#comparing-out-of-sample-rmse-to-in-sample-rmse"><i class="fa fa-check"></i>Comparing out-of-sample RMSE to in-sample RMSE</a></li>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#cross-valdiation-video"><i class="fa fa-check"></i>Cross Valdiation Video</a></li>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#advantage-of-cross-validation"><i class="fa fa-check"></i>Advantage of cross-validation</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#fold-cross-validation"><i class="fa fa-check"></i><b>2.6</b> 10-fold cross-validation</a><ul>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#exercise-5"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#fold-cross-validation-1"><i class="fa fa-check"></i><b>2.7</b> 5-fold cross-validation</a><ul>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#exercise-6"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="2.8" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#times-5-fold-cross-validation"><i class="fa fa-check"></i><b>2.8</b> <span class="math inline">\(5 \times 5\)</span>-fold cross-validation</a><ul>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#exercise-7"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="2.9" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#making-predictions-on-new-data"><i class="fa fa-check"></i><b>2.9</b> Making predictions on new data</a><ul>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#exercise-8"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html"><i class="fa fa-check"></i><b>3</b> Classification models: fitting them and evaluating their performance</a><ul>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#logistic-regression-on-sonar-video"><i class="fa fa-check"></i>Logistic regression on sonar video</a></li>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#why-a-traintest-split"><i class="fa fa-check"></i>Why a train/test split?</a></li>
+<li class="chapter" data-level="3.1" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#try-a-6040-split"><i class="fa fa-check"></i><b>3.1</b> Try a 60/40 split</a><ul>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#exercise-9"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#fit-a-logistic-regression-model"><i class="fa fa-check"></i><b>3.2</b> Fit a logistic regression model</a><ul>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#exercise-10"><i class="fa fa-check"></i>Exercise</a></li>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#confusion-matrix-video"><i class="fa fa-check"></i>Confusion matrix video</a></li>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#confusion-matrix"><i class="fa fa-check"></i>Confusion Matrix</a></li>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#confusion-matrix-takeaways"><i class="fa fa-check"></i>Confusion matrix takeaways</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#calculate-a-confusion-matrix"><i class="fa fa-check"></i><b>3.3</b> Calculate a confusion matrix</a><ul>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#exercise-11"><i class="fa fa-check"></i>Exercise</a></li>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#exercise-12"><i class="fa fa-check"></i>Exercise</a></li>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#class-probabilities-and-predictions-video"><i class="fa fa-check"></i>Class probabilities and predictions video</a></li>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#exercise-13"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#try-another-threshold"><i class="fa fa-check"></i><b>3.4</b> Try another threshold</a></li>
+<li class="chapter" data-level="3.5" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#from-probabilites-to-confusion-matrix"><i class="fa fa-check"></i><b>3.5</b> From probabilites to confusion matrix</a><ul>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#introducing-the-roc-curve-video"><i class="fa fa-check"></i>Introducing the ROC curve video</a></li>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#whats-the-value-of-a-roc-curve"><i class="fa fa-check"></i>What’s the value of a ROC curve?</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#plot-an-roc-curve"><i class="fa fa-check"></i><b>3.6</b> Plot an ROC curve</a><ul>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#exercise-14"><i class="fa fa-check"></i>Exercise</a></li>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#area-under-the-curve-auc-video"><i class="fa fa-check"></i>Area under the curve (AUC) video</a></li>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#model-roc-and-auc"><i class="fa fa-check"></i>Model, ROC, and AUC</a></li>
+</ul></li>
+<li class="chapter" data-level="3.7" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#customizing-traincontrol"><i class="fa fa-check"></i><b>3.7</b> Customizing <code>trainControl</code></a><ul>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#exercise-15"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="3.8" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#using-custom-traincontrol"><i class="fa fa-check"></i><b>3.8</b> Using custom <code>trainControl</code></a><ul>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#exercise-16"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html"><i class="fa fa-check"></i><b>4</b> Tuning model parameters to improve performance</a><ul>
+<li class="chapter" data-level="" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#random-forests-and-wine-video"><i class="fa fa-check"></i>Random forests and wine video</a></li>
+<li class="chapter" data-level="" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#random-forests-vs.linear-models"><i class="fa fa-check"></i>Random forests vs. linear models</a></li>
+<li class="chapter" data-level="4.1" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#fit-a-random-forest"><i class="fa fa-check"></i><b>4.1</b> Fit a random forest</a><ul>
+<li class="chapter" data-level="" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#exercise-17"><i class="fa fa-check"></i>Exercise</a></li>
+<li class="chapter" data-level="" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#explore-a-wider-model-space-video"><i class="fa fa-check"></i>Explore a wider model space video</a></li>
+<li class="chapter" data-level="" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#advantage-of-a-longer-tune-length"><i class="fa fa-check"></i>Advantage of a longer tune length</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#try-a-longer-tune-length"><i class="fa fa-check"></i><b>4.2</b> Try a longer tune length</a><ul>
+<li class="chapter" data-level="" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#exercise-18"><i class="fa fa-check"></i>Exercise</a></li>
+<li class="chapter" data-level="" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#custom-tuning-grids-video"><i class="fa fa-check"></i>Custom tuning grids video</a></li>
+<li class="chapter" data-level="" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#advantages-of-a-custom-tuning-grid"><i class="fa fa-check"></i>Advantages of a custom tuning grid</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#fit-a-random-forest-with-custom-tuning"><i class="fa fa-check"></i><b>4.3</b> Fit a random forest with custom tuning</a><ul>
+<li class="chapter" data-level="" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#exercise-19"><i class="fa fa-check"></i>Exercise</a></li>
+<li><a href="tuning-model-parameters-to-improve-performance.html#introducing-glmnet-video">Introducing <code>glmnet</code> video</a></li>
+<li><a href="tuning-model-parameters-to-improve-performance.html#advantage-of-glmnet">Advantage of <code>glmnet</code></a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#make-a-custom-traincontrol"><i class="fa fa-check"></i><b>4.4</b> Make a custom <code>trainControl</code></a><ul>
+<li class="chapter" data-level="" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#exercise-20"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#fit-glmnet-with-custom-traincontrol"><i class="fa fa-check"></i><b>4.5</b> Fit glmnet with custom <code>trainControl</code></a><ul>
+<li class="chapter" data-level="" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#exercise-21"><i class="fa fa-check"></i>Exercise</a></li>
+<li><a href="tuning-model-parameters-to-improve-performance.html#glmnet-with-custom-tuning-grid-video"><code>glmnet</code> with custom tuning grid video</a></li>
+<li class="chapter" data-level="" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#why-a-custom-tuning-grid"><i class="fa fa-check"></i>Why a custom tuning grid?</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#glmnet-with-custom-traincontrol-and-tuning"><i class="fa fa-check"></i><b>4.6</b> <code>glmnet</code> with custom <code>trainControl</code> and tuning</a><ul>
+<li class="chapter" data-level="" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#exercise-22"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#interpreting-glmnet-plots"><i class="fa fa-check"></i><b>4.7</b> Interpreting <code>glmnet</code> plots</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html"><i class="fa fa-check"></i><b>5</b> Preprocessing your data</a><ul>
+<li class="chapter" data-level="" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#median-imputation-video"><i class="fa fa-check"></i>Median imputation video</a></li>
+<li class="chapter" data-level="" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#median-imputation-vs.omitting-rows"><i class="fa fa-check"></i>Median imputation vs. omitting rows</a></li>
+<li class="chapter" data-level="5.1" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#apply-median-imputation"><i class="fa fa-check"></i><b>5.1</b> Apply median imputation</a><ul>
+<li class="chapter" data-level="" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#exercise-23"><i class="fa fa-check"></i>Exercise</a></li>
+<li class="chapter" data-level="" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#comparing-knn-imputation-to-median-imputation"><i class="fa fa-check"></i>Comparing KNN imputation to median imputation</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#use-knn-imputation"><i class="fa fa-check"></i><b>5.2</b> Use KNN imputation</a><ul>
+<li class="chapter" data-level="" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#exercise-24"><i class="fa fa-check"></i>Exercise</a></li>
+<li class="chapter" data-level="" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#compare-knn-and-median-imputation"><i class="fa fa-check"></i>Compare KNN and median imputation</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#multiple-preprocessing-methods"><i class="fa fa-check"></i>Multiple preprocessing methods</a></li>
+<li class="chapter" data-level="" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#order-of-operations"><i class="fa fa-check"></i>Order of operations</a></li>
+<li class="chapter" data-level="5.3" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#combining-preprocessing-methods"><i class="fa fa-check"></i><b>5.3</b> Combining preprocessing methods</a><ul>
+<li class="chapter" data-level="" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#exercise-25"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#handling-low-information-predictors-video"><i class="fa fa-check"></i>Handling low information predictors video</a></li>
+<li class="chapter" data-level="" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#why-remove-near-zero-variance-predictors"><i class="fa fa-check"></i>Why remove near zero variance predictors?</a></li>
+<li class="chapter" data-level="5.4" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#remove-near-zero-variance-predictors"><i class="fa fa-check"></i><b>5.4</b> Remove near zero variance predictors</a><ul>
+<li class="chapter" data-level="" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#exercise-26"><i class="fa fa-check"></i>Exercise</a></li>
+<li class="chapter" data-level="5.4.1" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#preprocess-and-nearzerovar"><i class="fa fa-check"></i><b>5.4.1</b> <code>preProcess()</code> and <code>nearZeroVar()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#fit-model-on-reduced-blood-brain-data"><i class="fa fa-check"></i><b>5.5</b> Fit model on reduced blood-brain data</a><ul>
+<li class="chapter" data-level="" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#exercise-27"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#using-pca-as-an-alternative-to-nearzerovar"><i class="fa fa-check"></i><b>5.6</b> Using PCA as an alternative to <code>nearZeroVar()</code></a><ul>
+<li class="chapter" data-level="" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#exercise-28"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html"><i class="fa fa-check"></i><b>6</b> Selecting models: a case study in churn prediction</a><ul>
+<li><a href="selecting-models-a-case-study-in-churn-prediction.html#reusing-a-traincontrol-video">Reusing a <code>trainControl</code> video</a></li>
+<li><a href="selecting-models-a-case-study-in-churn-prediction.html#why-reuse-a-traincontrol">Why reuse a <code>trainControl</code>?</a></li>
+<li class="chapter" data-level="6.1" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#make-custom-traintest-indices"><i class="fa fa-check"></i><b>6.1</b> Make custom train/test indices</a><ul>
+<li class="chapter" data-level="" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#exercise-29"><i class="fa fa-check"></i>Exercise</a></li>
+<li><a href="selecting-models-a-case-study-in-churn-prediction.html#reintroducing-glmnet-video">Reintroducing <code>glmnet</code> video</a></li>
+<li><a href="selecting-models-a-case-study-in-churn-prediction.html#glmnet-as-a-baseline-model"><code>glmnet</code> as a baseline model</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#fit-the-baseline-model"><i class="fa fa-check"></i><b>6.2</b> Fit the baseline model</a><ul>
+<li class="chapter" data-level="" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#exercise-30"><i class="fa fa-check"></i>Exercise</a></li>
+<li class="chapter" data-level="" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#random-forest-drawback"><i class="fa fa-check"></i>Random forest drawback</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#random-forest-with-custom-traincontrol"><i class="fa fa-check"></i><b>6.3</b> Random forest with custom <code>trainControl</code></a><ul>
+<li class="chapter" data-level="" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#exercise-31"><i class="fa fa-check"></i>Exercise</a></li>
+<li class="chapter" data-level="" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#matching-traintest-indices"><i class="fa fa-check"></i>Matching train/test indices</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#create-a-resamples-object"><i class="fa fa-check"></i><b>6.4</b> Create a resamples object</a><ul>
+<li class="chapter" data-level="" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#exercise-32"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#create-a-box-and-whisker-plot"><i class="fa fa-check"></i><b>6.5</b> Create a box-and-whisker plot</a><ul>
+<li class="chapter" data-level="" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#exercise-33"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#create-a-scatterplot"><i class="fa fa-check"></i><b>6.6</b> Create a scatterplot</a><ul>
+<li class="chapter" data-level="6.6.1" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#exercise-34"><i class="fa fa-check"></i><b>6.6.1</b> Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="6.7" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#ensembling-models"><i class="fa fa-check"></i><b>6.7</b> Ensembling models</a><ul>
+<li class="chapter" data-level="" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#exercise-35"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"><a href="https://www.datacamp.com/courses/machine-learning-toolbox">Machine Learning Toolbox</a></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="preprocessing-your-data" class="section level1">
+<h1><span class="header-section-number">Chapter 5</span> Preprocessing your data</h1>
+<p>In this chapter, you will practice using <code>train()</code> to preprocess data before fitting models, improving your ability to making accurate predictions.</p>
+<hr />
+<div id="median-imputation-video" class="section level3 unnumbered">
+<h3>Median imputation video</h3>
+<hr />
+</div>
+<div id="median-imputation-vs.omitting-rows" class="section level3 unnumbered">
+<h3>Median imputation vs. omitting rows</h3>
+<p>What’s the value of median imputation?</p>
+<ul>
+<li><p>It removes some variance from your data, making it easier to model.</p></li>
+<li><p><strong>It lets you model data with missing values.</strong></p></li>
+<li><p>It’s useless; you should just throw out rows of data with any missings.</p></li>
+</ul>
+<hr />
+</div>
+<div id="apply-median-imputation" class="section level2">
+<h2><span class="header-section-number">5.1</span> Apply median imputation</h2>
+<p>In this chapter, you’ll be using a version of the Wisconsin Breast Cancer dataset. This dataset presents a classic binary classification problem: 50% of the samples are benign, 50% are malignant, and the challenge is to identify which are which.</p>
+<p>This dataset is interesting because many of the predictors contain missing values and most rows of the dataset have at least one missing value. This presents a modeling challenge, because most machine learning algorithms cannot handle missing values out of the box. For example, your first instinct might be to fit a logistic regression model to this data, but prior to doing this you need a strategy for handling the <code>NA</code>s.</p>
+<p>Fortunately, the <code>train()</code> function in <code>caret</code> contains an argument called <code>preProcess</code>, which allows you to specify that median imputation should be used to fill in the missing values. In previous chapters, you created models with the <code>train()</code> function using formulas such as <code>y ~ .</code>. An alternative way is to specify the <code>x</code> and <code>y</code> arguments to <code>train()</code>, where <code>x</code> is an object with samples in rows and features in columns and <code>y</code> is a numeric or factor vector containing the outcomes. Said differently, <code>x</code> is a matrix or data frame that contains the whole dataset you’d use for the data argument to the <code>lm()</code> call, for example, but excludes the response variable column; <code>y</code> is a vector that contains just the response variable column.</p>
+<p>For this exercise, the argument <code>x to train()</code> is loaded in your workspace as <code>breast_cancer_x</code> and <code>y</code> as <code>breast_cancer_y</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">url &lt;-<span class="st"> &quot;https://assets.datacamp.com/production/course_1048/datasets/BreastCancer.RData&quot;</span>
+<span class="kw">download.file</span>(url, <span class="st">&quot;./Data/BreastCancer.RData&quot;</span>)
+<span class="kw">load</span>(<span class="st">&quot;./Data/BreastCancer.RData&quot;</span>)</code></pre></div>
+<hr />
+<div id="exercise-23" class="section level3 unnumbered">
+<h3>Exercise</h3>
+<ul>
+<li>Use the <code>train()</code> function to fit a glm model called <code>model</code> to the breast cancer dataset. Use <code>preProcess = &quot;medianImpute&quot;</code> to handle the missing values.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(caret)
+<span class="co"># Create custom trainControl: myControl</span>
+myControl &lt;-<span class="st"> </span><span class="kw">trainControl</span>(
+  <span class="dt">method =</span> <span class="st">&quot;cv&quot;</span>, 
+  <span class="dt">number =</span> <span class="dv">10</span>,
+  <span class="dt">summaryFunction =</span> twoClassSummary,
+  <span class="dt">classProbs =</span> <span class="ot">TRUE</span>, <span class="co"># IMPORTANT!</span>
+  <span class="dt">verboseIter =</span> <span class="ot">FALSE</span>
+)
+<span class="co"># Apply median imputation: model</span>
+model &lt;-<span class="st"> </span><span class="kw">train</span>(
+  <span class="dt">x =</span> breast_cancer_x, <span class="dt">y =</span> breast_cancer_y,
+  <span class="dt">method =</span> <span class="st">&quot;glm&quot;</span>,
+  <span class="dt">trControl =</span> myControl,
+  <span class="dt">preProcess =</span> <span class="st">&quot;medianImpute&quot;</span>
+)</code></pre></div>
+<pre><code>Warning in train.default(x = breast_cancer_x, y = breast_cancer_y, method =
+&quot;glm&quot;, : The metric &quot;Accuracy&quot; was not in the result set. ROC will be used
+instead.</code></pre>
+<ul>
+<li>Print the model to the console.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Print model to console</span>
+model</code></pre></div>
+<pre><code>Generalized Linear Model 
+
+699 samples
+  9 predictor
+  2 classes: &#39;benign&#39;, &#39;malignant&#39; 
+
+Pre-processing: median imputation (9) 
+Resampling: Cross-Validated (10 fold) 
+Summary of sample sizes: 629, 630, 629, 629, 629, 628, ... 
+Resampling results:
+
+  ROC        Sens       Spec     
+  0.9909642  0.9694686  0.9378333</code></pre>
+<hr />
+</div>
+<div id="comparing-knn-imputation-to-median-imputation" class="section level3 unnumbered">
+<h3>Comparing KNN imputation to median imputation</h3>
+<p>Will KNN imputation always be better than median imputation?</p>
+<ul>
+<li><p><strong>No, you should try both options and keep the one that gives more accurate models.</strong></p></li>
+<li><p>Yes, KNN is a more complicated model than medians, so it’s always better.</p></li>
+<li><p>No, medians are more statistically valid than KNN and should always be used.</p></li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="use-knn-imputation" class="section level2">
+<h2><span class="header-section-number">5.2</span> Use KNN imputation</h2>
+<p>In the previous exercise, you used median imputation to fill in missing values in the breast cancer dataset, but that is not the only possible method for dealing with missing data.</p>
+<p>An alternative to median imputation is <span class="math inline">\(k\)</span>-nearest neighbors, or KNN, imputation. This is a more advanced form of imputation where missing values are replaced with values from other rows that are similar to the current row. While this is a lot more complicated to implement in practice than simple median imputation, it is very easy to explore in <code>caret</code> using the <code>preProcess</code> argument to <code>train()</code>. You can simply use <code>preProcess = &quot;knnImpute&quot;</code> to change the method of imputation used prior to model fitting.</p>
+<hr />
+<div id="exercise-24" class="section level3 unnumbered">
+<h3>Exercise</h3>
+<p><code>breast_cancer_x</code> and <code>breast_cancer_y</code> are loaded in your workspace.</p>
+<ul>
+<li><p>Use the <code>train()</code> function to fit a glm model called <code>model2</code> to the breast cancer dataset.</p></li>
+<li><p>Use KNN imputation to handle missing values.</p></li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Apply KNN imputation: model2</span>
+model2 &lt;-<span class="st"> </span><span class="kw">train</span>(
+  <span class="dt">x =</span> breast_cancer_x, <span class="dt">y =</span> breast_cancer_y,
+  <span class="dt">method =</span> <span class="st">&quot;glm&quot;</span>,
+  <span class="dt">trControl =</span> myControl,
+  <span class="dt">preProcess =</span> <span class="st">&quot;knnImpute&quot;</span>
+)</code></pre></div>
+<pre><code>Warning in train.default(x = breast_cancer_x, y = breast_cancer_y, method =
+&quot;glm&quot;, : The metric &quot;Accuracy&quot; was not in the result set. ROC will be used
+instead.</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Print model to console</span>
+model2</code></pre></div>
+<pre><code>Generalized Linear Model 
+
+699 samples
+  9 predictor
+  2 classes: &#39;benign&#39;, &#39;malignant&#39; 
+
+Pre-processing: nearest neighbor imputation (9), centered (9), scaled (9) 
+Resampling: Cross-Validated (10 fold) 
+Summary of sample sizes: 630, 629, 629, 629, 629, 629, ... 
+Resampling results:
+
+  ROC        Sens       Spec 
+  0.9901472  0.9715942  0.942</code></pre>
+<hr />
+</div>
+<div id="compare-knn-and-median-imputation" class="section level3 unnumbered">
+<h3>Compare KNN and median imputation</h3>
+<p>All of the preprocessing steps in the <code>train()</code> function happen in the training set of each cross-validation fold, so the error metrics reported include the effects of the preprocessing.</p>
+<p>This includes the imputation method used (e.g. <code>knnImpute</code> or <code>medianImpute</code>). This is useful because it allows you to compare different methods of imputation and choose the one that performs the best out-of-sample.</p>
+<p><code>median_model</code> and <code>knn_model</code> are available in your workspace, as is <code>ANS</code>, which contains the resampled results of both models. Look at the results of the models by calling</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dotplot</span>(ANS, <span class="dt">metric =</span> <span class="st">&quot;ROC&quot;</span>)</code></pre></div>
+<p>and choose the one that performs the best out-of-sample. Which method of imputation yields the highest out-of-sample ROC score for your glm model?</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">9</span>)
+median_model &lt;-<span class="st"> </span>model
+knn_model &lt;-<span class="st"> </span>model2
+ANS &lt;-<span class="st"> </span><span class="kw">resamples</span>(<span class="kw">list</span>(<span class="dt">median_model =</span> median_model, <span class="dt">knn_model =</span> knn_model))
+<span class="kw">summary</span>(ANS)</code></pre></div>
+<pre><code>
+Call:
+summary.resamples(object = ANS)
+
+Models: median_model, knn_model 
+Number of resamples: 10 
+
+ROC 
+                  Min.   1st Qu.    Median      Mean   3rd Qu. Max. NA&#39;s
+median_model 0.9556159 0.9896739 0.9931461 0.9909642 0.9990892    1    0
+knn_model    0.9692029 0.9859620 0.9949678 0.9901472 0.9977355    1    0
+
+Sens 
+                  Min.   1st Qu.    Median      Mean   3rd Qu. Max. NA&#39;s
+median_model 0.9130435 0.9557971 0.9673913 0.9694686 1.0000000    1    0
+knn_model    0.9130435 0.9778986 0.9782609 0.9715942 0.9782609    1    0
+
+Spec 
+                  Min.   1st Qu.    Median      Mean   3rd Qu. Max. NA&#39;s
+median_model 0.8750000 0.9166667 0.9183333 0.9378333 0.9895833    1    0
+knn_model    0.9166667 0.9166667 0.9183333 0.9420000 0.9583333    1    0</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dotplot</span>(ANS, <span class="dt">metric =</span> <span class="st">&quot;ROC&quot;</span>)</code></pre></div>
+<p><img src="MachineLearningToolboxSC_files/figure-html/unnamed-chunk-94-1.png" width="384" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">densityplot</span>(ANS, <span class="dt">metric =</span> <span class="st">&quot;ROC&quot;</span>)</code></pre></div>
+<p><img src="MachineLearningToolboxSC_files/figure-html/unnamed-chunk-95-1.png" width="384" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">xyplot</span>(ANS, <span class="dt">metric =</span> <span class="st">&quot;ROC&quot;</span>)</code></pre></div>
+<p><img src="MachineLearningToolboxSC_files/figure-html/unnamed-chunk-96-1.png" width="384" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">bwplot</span>(ANS, <span class="dt">metric =</span> <span class="st">&quot;ROC&quot;</span>)</code></pre></div>
+<p><img src="MachineLearningToolboxSC_files/figure-html/unnamed-chunk-97-1.png" width="384" style="display: block; margin: auto;" /></p>
+<ul>
+<li><p>KNN imputation is much better than median imputation.</p></li>
+<li><p>KNN imputation is slightly better than median imputation.</p></li>
+<li><p>Median imputation is much better than KNN imputation.</p></li>
+<li><p><strong>Median imputation is slightly better than KNN imputation.</strong></p></li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="multiple-preprocessing-methods" class="section level2 unnumbered">
+<h2>Multiple preprocessing methods</h2>
+<hr />
+</div>
+<div id="order-of-operations" class="section level2 unnumbered">
+<h2>Order of operations</h2>
+<p>Which comes first in caret’s <code>preProcess()</code> function: median imputation or centering and scaling of variables?</p>
+<ul>
+<li><p><strong>Median imputation comes before centering and scaling.</strong></p></li>
+<li><p>Centering and scaling come before median imputation.</p></li>
+</ul>
+<p>Note: Centering and scaling require data with no missing values.</p>
+<hr />
+</div>
+<div id="combining-preprocessing-methods" class="section level2">
+<h2><span class="header-section-number">5.3</span> Combining preprocessing methods</h2>
+<p>The <code>preProcess</code> argument to <code>train()</code> doesn’t just limit you to imputing missing values. It also includes a wide variety of other <code>preProcess</code> techniques to make your life as a data scientist much easier. You can read a full list of them by typing <code>?preProcess</code> and reading the help page for this function.</p>
+<p>One set of preprocessing functions that is particularly useful for fitting regression models is standardization: centering and scaling. You first center by subtracting the mean of each column from each value in that column, then you scale by dividing by the standard deviation.</p>
+<p>Standardization transforms your data such that for each column, the mean is 0 and the standard deviation is 1. This makes it easier for regression models to find a good solution.</p>
+<hr />
+<div id="exercise-25" class="section level3 unnumbered">
+<h3>Exercise</h3>
+<p><code>breast_cancer_x</code> and <code>breast_cancer_y</code> are loaded in your workspace. Fit two models called <code>model1</code> and <code>model2</code> to the breast cancer data, then print each to the console:</p>
+<ul>
+<li>A logistic regression model using only median imputation: <code>model1</code></li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Fit glm with median imputation: model1</span>
+model1 &lt;-<span class="st"> </span><span class="kw">train</span>(
+  <span class="dt">x =</span> breast_cancer_x, <span class="dt">y =</span> breast_cancer_y,
+  <span class="dt">method =</span> <span class="st">&quot;glm&quot;</span>,
+  <span class="dt">trControl =</span> myControl,
+  <span class="dt">preProcess =</span> <span class="st">&quot;medianImpute&quot;</span>
+)</code></pre></div>
+<pre><code>Warning in train.default(x = breast_cancer_x, y = breast_cancer_y, method =
+&quot;glm&quot;, : The metric &quot;Accuracy&quot; was not in the result set. ROC will be used
+instead.</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Print model1</span>
+model1</code></pre></div>
+<pre><code>Generalized Linear Model 
+
+699 samples
+  9 predictor
+  2 classes: &#39;benign&#39;, &#39;malignant&#39; 
+
+Pre-processing: median imputation (9) 
+Resampling: Cross-Validated (10 fold) 
+Summary of sample sizes: 630, 629, 628, 629, 629, 629, ... 
+Resampling results:
+
+  ROC        Sens       Spec     
+  0.9921602  0.9694203  0.9418333</code></pre>
+<ul>
+<li>A logistic regression model using median imputation, centering, and scaling (in that order): <code>model2</code></li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Fit glm with median imputation and standardization: model2</span>
+model2 &lt;-<span class="st"> </span><span class="kw">train</span>(
+  <span class="dt">x =</span> breast_cancer_x, <span class="dt">y =</span> breast_cancer_y,
+  <span class="dt">method =</span> <span class="st">&quot;glm&quot;</span>,
+  <span class="dt">trControl =</span> myControl,
+  <span class="dt">preProcess =</span> <span class="kw">c</span>(<span class="st">&quot;medianImpute&quot;</span>, <span class="st">&quot;center&quot;</span>, <span class="st">&quot;scale&quot;</span>)
+)</code></pre></div>
+<pre><code>Warning in train.default(x = breast_cancer_x, y = breast_cancer_y, method =
+&quot;glm&quot;, : The metric &quot;Accuracy&quot; was not in the result set. ROC will be used
+instead.</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Print model2</span>
+model2</code></pre></div>
+<pre><code>Generalized Linear Model 
+
+699 samples
+  9 predictor
+  2 classes: &#39;benign&#39;, &#39;malignant&#39; 
+
+Pre-processing: median imputation (9), centered (9), scaled (9) 
+Resampling: Cross-Validated (10 fold) 
+Summary of sample sizes: 629, 629, 629, 629, 628, 630, ... 
+Resampling results:
+
+  ROC        Sens       Spec     
+  0.9913116  0.9650242  0.9461667</code></pre>
+<hr />
+</div>
+</div>
+<div id="handling-low-information-predictors-video" class="section level2 unnumbered">
+<h2>Handling low information predictors video</h2>
+<hr />
+</div>
+<div id="why-remove-near-zero-variance-predictors" class="section level2 unnumbered">
+<h2>Why remove near zero variance predictors?</h2>
+<p>What’s the best reason to remove near zero variance predictors from your data before building a model?</p>
+<ul>
+<li><p>Because they are guaranteed to have no effect on your model.</p></li>
+<li><p>Because their p-values in a linear regression will always be low.</p></li>
+<li><p><strong>To reduce model-fitting time without reducing model accuracy.</strong></p></li>
+</ul>
+<p>Note: Low variance variables are unlikely to have a large impact on our models.</p>
+<hr />
+</div>
+<div id="remove-near-zero-variance-predictors" class="section level2">
+<h2><span class="header-section-number">5.4</span> Remove near zero variance predictors</h2>
+<p>As you saw in the video, for the next set of exercises, you’ll be using the blood-brain dataset. This is a biochemical dataset in which the task is to predict the following value for a set of biochemical compounds:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">log</span>((concentration of compound <span class="cf">in</span> brain) <span class="op">/</span>
+<span class="st">      </span>(concentration of compound <span class="cf">in</span> blood))</code></pre></div>
+<p>This gives a quantitative metric of the compound’s ability to cross the blood-brain barrier, and is useful for understanding the biological properties of that barrier.</p>
+<p>One interesting aspect of this dataset is that it contains many variables and many of these variables have extremely low variances. This means that there is very little information in these variables because they mostly consist of a single value (e.g. zero).</p>
+<p>Fortunately, <code>caret</code> contains a utility function called <code>nearZeroVar()</code> for removing such variables to save time during modeling.</p>
+<p><code>nearZeroVar()</code> takes in data <code>x</code>, then looks at the ratio of the most common value to the second most common value, <code>freqCut</code>, and the percentage of distinct values out of the number of total samples, <code>uniqueCut</code>. By default, caret uses <code>freqCut = 19</code> and <code>uniqueCut = 10</code>, which is fairly conservative. I like to be a little more aggressive and use <code>freqCut = 2</code> and <code>uniqueCut = 20</code> when calling <code>nearZeroVar()</code>.</p>
+<hr />
+<div id="exercise-26" class="section level3 unnumbered">
+<h3>Exercise</h3>
+<p><code>bloodbrain_x</code> and <code>bloodbrain_y</code> are loaded in your workspace.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">url &lt;-<span class="st"> &quot;https://assets.datacamp.com/production/course_1048/datasets/BloodBrain.RData&quot;</span>
+<span class="kw">download.file</span>(url, <span class="st">&quot;./Data/BloodBrain.RData&quot;</span>)
+<span class="kw">load</span>(<span class="st">&quot;./Data/BloodBrain.RData&quot;</span>)</code></pre></div>
+<ul>
+<li>Identify the near zero variance predictors by running <code>nearZeroVar()</code> on the blood-brain dataset. Store the result as an object called <code>remove_cols</code>. Use <code>freqCut = 2</code> and <code>uniqueCut = 20</code> in the call to <code>nearZeroVar()</code>.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Identify near zero variance predictors: remove</span>
+remove_cols &lt;-<span class="st"> </span><span class="kw">nearZeroVar</span>(bloodbrain_x, <span class="dt">names =</span> <span class="ot">TRUE</span>, <span class="dt">freqCut =</span> <span class="dv">2</span>, <span class="dt">uniqueCut =</span> <span class="dv">20</span>)</code></pre></div>
+<ul>
+<li>Use <code>names()</code> to create a vector containing all column names of <code>bloodbrain_x</code>. Call this <code>all_cols</code>.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">all_cols &lt;-<span class="st"> </span><span class="kw">names</span>(bloodbrain_x)</code></pre></div>
+<ul>
+<li>Make a new data frame called <code>bloodbrain_x_small</code> with the near-zero variance variables removed. Use <code>setdiff()</code> to isolate the column names that you wish to keep (i.e. that you don’t want to remove.)</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Remove from data: bloodbrain_x_small</span>
+bloodbrain_x_small &lt;-<span class="st"> </span>bloodbrain_x[ , <span class="kw">setdiff</span>(all_cols, remove_cols)]</code></pre></div>
+<hr />
+</div>
+<div id="preprocess-and-nearzerovar" class="section level3">
+<h3><span class="header-section-number">5.4.1</span> <code>preProcess()</code> and <code>nearZeroVar()</code></h3>
+<p>Can you use the <code>preProcess</code> argument in <code>caret</code> to remove near-zero variance predictors? Or do you have to do this by hand, prior to modeling, using the <code>nearZeroVar()</code> function?</p>
+<ul>
+<li><p><strong>Yes! Set the <code>preProcess</code> argument equal to <code>&quot;nzv&quot;.</code></strong></p></li>
+<li><p>No, unfortunately. You have to do this by hand.</p></li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="fit-model-on-reduced-blood-brain-data" class="section level2">
+<h2><span class="header-section-number">5.5</span> Fit model on reduced blood-brain data</h2>
+<p>Now that you’ve reduced your dataset, you can fit a glm model to it using the <code>train()</code> function. This model will run faster than using the full dataset and will yield very similar predictive accuracy.</p>
+<p>Furthermore, zero variance variables can cause problems with cross-validation (e.g. if one fold ends up with only a single unique value for that variable), so removing them prior to modeling means you are less likely to get errors during the fitting process.</p>
+<hr />
+<div id="exercise-27" class="section level3 unnumbered">
+<h3>Exercise</h3>
+<p><code>bloodbrain_x</code>, <code>bloodbrain_y</code>, <code>remove_cols</code>, and <code>bloodbrain_x_small</code> are loaded in your workspace.</p>
+<ul>
+<li>Fit a glm model using the <code>train()</code> function and the reduced blood-brain dataset you created in the previous exercise.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Fit model on reduced data: model</span>
+model &lt;-<span class="st"> </span><span class="kw">train</span>(<span class="dt">x =</span> bloodbrain_x_small, <span class="dt">y =</span> bloodbrain_y, <span class="dt">method =</span> <span class="st">&quot;glm&quot;</span>)</code></pre></div>
+<ul>
+<li>Print the result to the console.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Print model to console</span>
+model</code></pre></div>
+<pre><code>Generalized Linear Model 
+
+208 samples
+112 predictors
+
+No pre-processing
+Resampling: Bootstrapped (25 reps) 
+Summary of sample sizes: 208, 208, 208, 208, 208, 208, ... 
+Resampling results:
+
+  RMSE      Rsquared   MAE     
+  1.798777  0.1069717  1.155315</code></pre>
+<hr />
+</div>
+</div>
+<div id="using-pca-as-an-alternative-to-nearzerovar" class="section level2">
+<h2><span class="header-section-number">5.6</span> Using PCA as an alternative to <code>nearZeroVar()</code></h2>
+<p>An alternative to removing low-variance predictors is to run PCA on your dataset. This is sometimes preferable because it does not throw out all of your data: many different low variance predictors may end up combined into one high variance PCA variable, which might have a positive impact on your model’s accuracy.</p>
+<p>This is an especially good trick for linear models: the <code>pca</code> option in the <code>preProcess</code> argument will center and scale your data, combine low variance variables, and ensure that all of your predictors are orthogonal. This creates an ideal dataset for linear regression modeling, and can often improve the accuracy of your models.</p>
+<hr />
+<div id="exercise-28" class="section level3 unnumbered">
+<h3>Exercise</h3>
+<p><code>bloodbrain_x</code> and <code>bloodbrain_y</code> are loaded in your workspace.</p>
+<ul>
+<li>Fit a <code>glm</code> model to the full blood-brain dataset using the <code>&quot;pca&quot;</code> option to <code>preProcess</code>.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Fit glm model using PCA: model</span>
+model &lt;-<span class="st"> </span><span class="kw">train</span>(
+  <span class="dt">x =</span> bloodbrain_x, <span class="dt">y =</span> bloodbrain_y,
+  <span class="dt">method =</span> <span class="st">&quot;glm&quot;</span>, <span class="dt">preProcess =</span> <span class="st">&quot;pca&quot;</span>
+)</code></pre></div>
+<ul>
+<li>Print the model to the console and inspect the result.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Print model to console</span>
+model</code></pre></div>
+<pre><code>Generalized Linear Model 
+
+208 samples
+132 predictors
+
+Pre-processing: principal component signal extraction (132), centered
+ (132), scaled (132) 
+Resampling: Bootstrapped (25 reps) 
+Summary of sample sizes: 208, 208, 208, 208, 208, 208, ... 
+Resampling results:
+
+  RMSE       Rsquared   MAE      
+  0.6200783  0.4215242  0.4663907</code></pre>
+<p>Note that the PCA model’s accuracy is slightly higher than the <code>nearZeroVar()</code> model from the previous exercise. PCA is generally a better method for handling low-information predictors than throwing them out entirely.</p>
+<hr />
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="tuning-model-parameters-to-improve-performance.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="selecting-models-a-case-study-in-churn-prediction.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["MachineLearningToolboxSC.pdf", "MachineLearningToolboxSC.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

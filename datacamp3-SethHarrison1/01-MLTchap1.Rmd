@@ -1,0 +1,478 @@
+# Regression models: fitting them and evaluating their performance
+
+In the first chapter of this course, you'll fit regression models with `train()` and evaluate their out-of-sample performance using cross-validation and root-mean-square error (RMSE).
+
+------
+
+### Welcome to the Toolbox Video{-}
+
+<iframe src="https://drive.google.com/file/d/1HWTPEixyJOFYntkTX2az-KS_g-04uI7p/preview" width="740" height="420"></iframe>
+
+-------
+
+
+### In-sample RMSE for linear regression{-}
+
+RMSE is commonly calculated in-sample on your training set. What's a potential drawback to calculating training set error?
+
+* There's no potential drawback to calculating training set error, but you should calculate $R^2$ instead of RMSE.
+
+* **You have no idea how well your model generalizes to new data (i.e. overfitting).**
+
+* You should manually inspect your model to validate its coefficients and calculate RMSE.
+
+----------------
+
+## In-sample RMSE for linear regression on `diamonds`
+
+`diamonds` is a classic dataset from the `ggplot2` package written by @R-ggplot2. The dataset contains physical attributes of diamonds as well as the price they sold for. One interesting modeling challenge is predicting diamond price based on their attributes using something like a linear regression.
+
+Recall that to fit a linear regression, you use the `lm()` function in the following format:
+
+```{r, eval = FALSE}
+mod <- lm(y ~ x, data = my_data)
+```
+
+To make predictions using `mod` on the original data, you call the `predict()` function:
+
+```{r, eval = FALSE}
+pred <- predict(mod, newdata = my_data)
+```
+
+----------
+
+### Exercise{-} 
+
+* Fit a linear model on the diamonds dataset predicting price using all other variables as predictors (i.e. `price ~ .`). Save the result to `model`.
+
+```{r, label = "ex1"}
+library(ggplot2)
+# Fit lm model: model
+model <- lm(price ~ ., data = diamonds)
+```
+
+* Make predictions using `model` on the full original dataset and save the result to `p`.
+
+```{r}
+# Predict on full data: p
+p <- predict(model, newdata = diamonds)
+```
+
+* Compute errors using the formula `errors = actual - predicted`. Save the result to `error`.
+
+```{r}
+# Compute errors: error
+error <- diamonds$price - p
+```
+
+* Compute RMSE and print it to the console.
+
+```{r}
+# Compute RMSE
+RMSE <- sqrt(mean(error^2))
+RMSE
+```
+
+-----------
+
+### Out-of-sample error measures video{-}
+
+<iframe src="https://drive.google.com/file/d/1yH_l3-YqXb2H5wGg5vYmdRXUYcH0XkzS/preview" width="740" height="420"></iframe>
+
+----------
+
+### Out-of-sample RMSE for linear regression{-}
+
+What is the advantage of using a train/test split rather than just validating your model in-sample on the training set?
+
+* It takes less time to calculate error on the test set, since it is smaller than the training set. 
+
+* There is no advantage to using a test set. You can just use adjusted  $R^2$  on your training set. 
+
+* **It gives you an estimate of how well your model performs on new data.**
+
+-----------
+
+## Randomly order the data frame
+
+One way you can take a train/test split of a dataset is to order the dataset randomly, then divide it into the two sets. This ensures that the training set and test set are both random samples and that any biases in the ordering of the dataset (e.g. if it had originally been ordered by `price` or `size`) are not retained in the samples we take for training and testing your models. You can think of this like shuffling a brand new deck of playing cards before dealing hands.
+
+First, you set a random seed so that your work is reproducible and you get the same random split each time you run your script:
+
+```{r, eval = FALSE}
+set.seed(42)
+```
+
+Next, you use the `sample()` function to shuffle the row indices of the `diamonds` dataset. You can later use these these indices to reorder the dataset.
+
+```{r, eval = FALSE}
+rows <- sample(nrow(diamonds))
+```
+
+Finally, you can use this random vector to reorder the diamonds dataset:
+
+```{r, eval = FALSE}
+diamonds <- diamonds[rows, ]
+```
+
+------------
+
+### Exercise{-}
+
+* Set the random seed to 42.
+
+```{r label = 'ex2'}
+# Set seed
+set.seed(42)
+```
+
+* Make a vector of row indices called `rows`.
+
+```{r}
+# Shuffle row indices: rows
+rows <- sample(nrow(diamonds))
+```
+
+* Randomly reorder the `diamonds` data frame.
+
+```{r}
+# Randomly order data
+diamonds <- diamonds[rows, ]
+```
+
+----------
+
+
+## Try an 80/20 split
+
+Now that your dataset is randomly ordered, you can split the first 80% of it into a training set, and the last 20% into a test set. You can do this by choosing a split point approximately 80% of the way through your data:
+
+```{r, eval = FALSE}
+split <- round(nrow(mydata) * 0.80)
+```
+
+You can then use this point to break off the first 80% of the dataset as a training set:
+
+```{r, eval = FALSE}
+mydata[1:split, ]
+```
+
+And then you can use that same point to determine the test set:
+
+```{r, eval = FALSE}
+mydata[(split + 1):nrow(mydata), ]
+```
+
+
+----------
+
+### Exercise{-}
+
+* Choose a row index to split on so that the split point is approximately 80% of the way through the `diamonds` dataset. Call this index `split`.
+
+```{r}
+# Determine row to split on: split
+split <- round(nrow(diamonds)*0.80)
+```
+
+* Create a training set called `train` using that index.
+
+```{r}
+# Create train
+train <- diamonds[1:split, ]
+```
+
+* Create a test set called `test` using that index.
+
+```{r}
+# Create test
+test <- diamonds[(split + 1):nrow(diamonds), ]
+```
+
+----------
+
+
+## Predict on test set
+
+Now that you have a randomly split training set and test set, you can use the `lm()` function as you did in the first exercise to fit a model to your training set, rather than the entire dataset. Recall that you can use the formula interface to the linear regression function to fit a model with a specified target variable using all other variables in the dataset as predictors:
+
+```{r, eval = FALSE}
+mod <- lm(y ~ ., data = training_data)
+```
+
+You can use the `predict()` function to make predictions from that model on new data. The new dataset must have all of the columns from the training data, but they can be in a different order with different values. Here, rather than re-predicting on the training set, you can predict on the test set, which you did not use for training the model. This will allow you to determine the *out-of-sample error* for the model in the next exercise:
+
+```{r, eval = FALSE}
+p <- predict(model, newdata = new_data)
+```
+
+----------
+
+
+### Exercise{-}
+
+* Fit an `lm()` model called `model` to predict price using all other variables as covariates. Be sure to use the training set, `train`.
+
+```{r}
+# Fit lm model on train: model
+model <- lm(price ~ . , data = train)
+```
+
+* Predict on the test set, test, using `predict()`. Store these values in a vector called `p`.
+
+```{r}
+# Predict on test: p
+p <- predict(model, newdata = test, type = "response")
+```
+
+----------
+
+
+## Calculate test set RMSE
+
+Now that you have predictions on the test set, you can use these predictions to calculate an error metric (in this case RMSE) on the test set and see how the model performs out-of-sample, rather than in-sample as you did in the first exercise. You first do this by calculating the errors between the predicted diamond prices and the actual diamond prices by subtracting the predictions from the actual values.
+
+Once you have an error vector, calculating RMSE is as simple as squaring it, taking the mean, then taking the square root:
+
+```{r, eval = FALSE}
+sqrt(mean(error^2))
+```
+
+----
+
+### Exercise{-}
+
+* Calculate the error between the predictions on the test set and the actual diamond prices in the test set. Call this `error`.
+
+```{r}
+# Compute errors: error
+error <- test$price - p
+```
+
+* Calculate RMSE using this error vector, just printing the result to the console.
+
+```{r}
+# Calculate RMSE
+RMSE <- sqrt(mean(error^2))
+RMSE
+```
+
+------
+
+### Comparing out-of-sample RMSE to in-sample RMSE{-}
+
+Why is the test set RMSE higher than the training set RMSE?
+
+* **Because you overfit the training set and the test set contains data the model hasn't seen before.** 
+
+* Because you should not use a test set at all and instead just look at error on the training set. 
+
+* Because the test set has a smaller sample size the training set and thus the mean error is lower.
+
+------------
+
+### Cross Valdiation Video{-}
+
+<iframe src="https://drive.google.com/file/d/1TU_Xhjm_Ldlh4yBbKX_2Et6A5cDFSp5R/preview" width="740" height="420"></iframe>
+
+-------------
+
+### Advantage of cross-validation{-}
+
+What is the advantage of cross-validation over a single train/test split?
+
+* There is no advantage to cross-validation, just as there is no advantage to a single train/test split. You should be validating your models in-sample with a metric like adjusted $R^2$.
+
+* You can pick the best test set to minimize the reported RMSE of your model. 
+
+* **It gives you multiple estimates of out-of-sample error, rather than a single estimate.**
+
+Note: If all of your estimates give similar outputs, you can be more certain of the model's accuracy. If your estimates give different outputs, that tells you the model does not perform consistently and suggests a problem with it.
+
+## 10-fold cross-validation
+
+A better approach to validating models is to use multiple systematic test sets rather than a single random train/test split. Fortunately, the `caret` package written by @R-caret makes this very easy to do:
+
+```{r, eval = FALSE}
+model <- train(y ~ ., my_data)
+```
+
+`caret` supports many types of cross-validation, and you can specify which type of cross-validation and the number of cross-validation folds with the `trainControl()` function, which you pass to the `trControl` argument in `train()`:
+
+```{r, eval = FALSE}
+model <- train(
+  y ~ ., my_data,
+  method = "lm",
+  trControl = trainControl(
+    method = "cv", number = 10,
+    verboseIter = TRUE
+  )
+)
+```
+
+It is important to note that you pass the method for modeling to the main `train()` function and the method for cross-validation to the `trainControl()` function.
+
+----
+
+### Exercise{-}
+
+* Load the `caret` package.
+
+```{r}
+# Load the caret package
+library(caret)
+```
+
+* Fit a linear regression to model price using all other variables in the `diamonds` dataset as predictors. Use the `train()` function and 10-fold cross-validation. 
+
+```{r}
+# Fit lm model using 10-fold CV: model
+model <- train(
+  price ~ ., data = diamonds,
+  method = "lm",
+  trControl = trainControl(
+    method = "cv", number = 10,
+    verboseIter = FALSE
+  )
+)
+```
+
+* Print the model to the console and examine the results.
+
+```{r}
+# Print model to console
+model
+model$finalModel  # show model coefficients 
+# summary(model)  # to see all
+```
+
+----
+
+## 5-fold cross-validation
+
+In this tutorial, you will use a wide variety of datasets to explore the full flexibility of the `caret` package. Here, you will use the famous `Boston` housing dataset, where the goal is to predict median home values in various Boston suburbs.
+
+You can use exactly the same code as in the previous exercise, but change the dataset used by the model:
+
+```{r, eval = FALSE}
+model <- train(
+  medv ~ ., Boston,
+  method = "lm",
+  trControl = trainControl(
+    method = "cv", number = 10,
+    verboseIter = FALSE
+  )
+)
+```
+
+Next, you can reduce the number of cross-validation folds from 10 to 5 using the number argument to the `trainControl()` argument:
+
+```{r, eval = FALSE}
+trControl = trainControl(
+  method = "cv", number = 5,
+  verboseIter = TRUE
+)
+```
+
+----
+
+### Exercise{-}
+
+* Load the `MASS` package.
+
+```{r}
+# Load the MASS pacakge
+library(MASS)
+```
+
+* Fit an `lm()` model to the `Boston` housing dataset, such that `medv` is the response variable and all other variables are explanatory variables.  Use 5-fold cross-validation rather than 10-fold cross-validation.
+
+```{r}
+# Fit lm model using 5-fold CV: model
+model <- train(
+  medv ~. , data = Boston,
+  method = "lm",
+  trControl = trainControl(
+    method = "cv", number = 5,
+    verboseIter = FALSE
+  )
+)
+```
+
+* Print the model to the console and inspect the results.
+
+```{r}
+# Print model to console
+model
+# show coefficients of model
+model$finalModel 
+summary(model)
+```
+
+------
+
+## $5 \times 5$-fold cross-validation
+
+You can do more than just one iteration of cross-validation. Repeated cross-validation gives you a better estimate of the test-set error. You can also repeat the entire cross-validation procedure. This takes longer, but gives you many more out-of-sample datasets to look at and much more precise assessments of how well the model performs.
+
+One of the awesome things about the `train()` function in `caret` is how easy it is to run very different models or methods of cross-validation just by tweaking a few simple arguments to the function call. For example, you could repeat your entire cross-validation procedure 5 times for greater confidence in your estimates of the model's out-of-sample accuracy, e.g.:
+
+```{r, eval = FALSE}
+trControl = trainControl(
+  method = "repeatedcv", number = 5,
+  repeats = 5, verboseIter = TRUE
+)
+```
+
+----
+
+### Exercise{-}
+
+* Re-fit the linear regression model to the `Boston` housing dataset. Use 5 repeats of 5-fold cross-validation.
+
+```{r}
+# Fit lm model using 5 x 5-fold CV: model
+model <- train(
+  medv ~ ., data = Boston,
+  method = "lm",
+  trControl = trainControl(
+    method = "repeatedcv", number = 5,
+    repeats = 5, verboseIter = FALSE
+  )
+)
+```
+
+* Print the model to the console.
+
+```{r}
+# Print model to console
+model
+summary(model)
+```
+
+----
+
+
+## Making predictions on new data
+
+Finally, the model you fit with the `train()` function has the exact same `predict()` interface as the linear regression models you fit earlier.
+
+After fitting a model with `train()`, you can call `predict()` with new data, e.g:
+
+```{r, eval = FALSE}
+predict(my_model, newdata = new_data)
+```
+
+---- 
+
+### Exercise{-}
+
+* Use the `predict()` function to make predictions with `model` on the full `Boston` housing dataset. Print the result to the console.
+
+```{r, label = "ex9"}
+# Predict on full Boston dataset
+head(predict(model, newdata = Boston))
+tail(predict(model, newdata = Boston))
+```
+
+----

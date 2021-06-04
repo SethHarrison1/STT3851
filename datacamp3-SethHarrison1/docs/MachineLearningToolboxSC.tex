@@ -1,0 +1,4166 @@
+\documentclass[]{book}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Machine Learning Toolbox},
+            pdfauthor={Seth Harrison},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{natbib}
+\bibliographystyle{apalike}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{longtable,booktabs}
+\usepackage{graphicx}
+% grffile has become a legacy package: https://ctan.org/pkg/grffile
+\IfFileExists{grffile.sty}{%
+\usepackage{grffile}
+}{}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{\href{https://www.datacamp.com/courses/machine-learning-toolbox}{Machine
+Learning Toolbox}}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Seth Harrison}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{Last compiled: Nov 21, 2019}
+
+\usepackage{booktabs}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{1}
+\tableofcontents
+}
+\chapter{Prerequisites}\label{prerequisites}
+
+This material is from the \href{https://www.datacamp.com}{DataCamp}
+course
+\href{https://www.datacamp.com/courses/machine-learning-toolbox}{Machine
+Learning Toolbox} by Zachary Deane-Mayer and Max Kuhn. Before using this
+material, the reader should have completed and be comfortable with the
+material in the DataCamp modules
+\href{https://www.datacamp.com/courses/free-introduction-to-r}{Introduction
+to R},
+\href{https://www.datacamp.com/courses/intermediate-r}{Intermediate R},
+and
+\href{https://www.datacamp.com/courses/correlation-and-regression}{Correlation
+and Regression}.
+
+Reminder to self: each \texttt{*.Rmd} file contains one and only one
+chapter, and a chapter is defined by the first-level heading
+\texttt{\#}.
+
+\chapter{Regression models: fitting them and evaluating their
+performance}\label{regression-models-fitting-them-and-evaluating-their-performance}
+
+In the first chapter of this course, you'll fit regression models with
+\texttt{train()} and evaluate their out-of-sample performance using
+cross-validation and root-mean-square error (RMSE).
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Welcome to the Toolbox
+Video}\label{welcome-to-the-toolbox-video}
+\addcontentsline{toc}{subsection}{Welcome to the Toolbox Video}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{In-sample RMSE for linear
+regression}\label{in-sample-rmse-for-linear-regression}
+\addcontentsline{toc}{subsection}{In-sample RMSE for linear regression}
+
+RMSE is commonly calculated in-sample on your training set. What's a
+potential drawback to calculating training set error?
+
+\begin{itemize}
+\item
+  There's no potential drawback to calculating training set error, but
+  you should calculate \(R^2\) instead of RMSE.
+\item
+  \textbf{You have no idea how well your model generalizes to new data
+  (i.e.~overfitting).}
+\item
+  You should manually inspect your model to validate its coefficients
+  and calculate RMSE.
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{\texorpdfstring{In-sample RMSE for linear regression on
+\texttt{diamonds}}{In-sample RMSE for linear regression on diamonds}}\label{in-sample-rmse-for-linear-regression-on-diamonds}
+
+\texttt{diamonds} is a classic dataset from the \texttt{ggplot2} package
+written by \citet{R-ggplot2}. The dataset contains physical attributes
+of diamonds as well as the price they sold for. One interesting modeling
+challenge is predicting diamond price based on their attributes using
+something like a linear regression.
+
+Recall that to fit a linear regression, you use the \texttt{lm()}
+function in the following format:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mod <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\NormalTok{x, }\DataTypeTok{data =}\NormalTok{ my_data)}
+\end{Highlighting}
+\end{Shaded}
+
+To make predictions using \texttt{mod} on the original data, you call
+the \texttt{predict()} function:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pred <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(mod, }\DataTypeTok{newdata =}\NormalTok{ my_data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\begin{itemize}
+\tightlist
+\item
+  Fit a linear model on the diamonds dataset predicting price using all
+  other variables as predictors (i.e.
+  \texttt{price\ \textasciitilde{}\ .}). Save the result to
+  \texttt{model}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(ggplot2)}
+\CommentTok{# Fit lm model: model}
+\NormalTok{model <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(price }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ diamonds)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Make predictions using \texttt{model} on the full original dataset and
+  save the result to \texttt{p}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Predict on full data: p}
+\NormalTok{p <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(model, }\DataTypeTok{newdata =}\NormalTok{ diamonds)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Compute errors using the formula
+  \texttt{errors\ =\ actual\ -\ predicted}. Save the result to
+  \texttt{error}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Compute errors: error}
+\NormalTok{error <-}\StringTok{ }\NormalTok{diamonds}\OperatorTok{$}\NormalTok{price }\OperatorTok{-}\StringTok{ }\NormalTok{p}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Compute RMSE and print it to the console.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Compute RMSE}
+\NormalTok{RMSE <-}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\KeywordTok{mean}\NormalTok{(error}\OperatorTok{^}\DecValTok{2}\NormalTok{))}
+\NormalTok{RMSE}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 1129.843
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Out-of-sample error measures
+video}\label{out-of-sample-error-measures-video}
+\addcontentsline{toc}{subsection}{Out-of-sample error measures video}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Out-of-sample RMSE for linear
+regression}\label{out-of-sample-rmse-for-linear-regression}
+\addcontentsline{toc}{subsection}{Out-of-sample RMSE for linear
+regression}
+
+What is the advantage of using a train/test split rather than just
+validating your model in-sample on the training set?
+
+\begin{itemize}
+\item
+  It takes less time to calculate error on the test set, since it is
+  smaller than the training set.
+\item
+  There is no advantage to using a test set. You can just use adjusted
+  \(R^2\) on your training set.
+\item
+  \textbf{It gives you an estimate of how well your model performs on
+  new data.}
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Randomly order the data
+frame}\label{randomly-order-the-data-frame}
+
+One way you can take a train/test split of a dataset is to order the
+dataset randomly, then divide it into the two sets. This ensures that
+the training set and test set are both random samples and that any
+biases in the ordering of the dataset (e.g.~if it had originally been
+ordered by \texttt{price} or \texttt{size}) are not retained in the
+samples we take for training and testing your models. You can think of
+this like shuffling a brand new deck of playing cards before dealing
+hands.
+
+First, you set a random seed so that your work is reproducible and you
+get the same random split each time you run your script:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{42}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Next, you use the \texttt{sample()} function to shuffle the row indices
+of the \texttt{diamonds} dataset. You can later use these these indices
+to reorder the dataset.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rows <-}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\KeywordTok{nrow}\NormalTok{(diamonds))}
+\end{Highlighting}
+\end{Shaded}
+
+Finally, you can use this random vector to reorder the diamonds dataset:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{diamonds <-}\StringTok{ }\NormalTok{diamonds[rows, ]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-1}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\begin{itemize}
+\tightlist
+\item
+  Set the random seed to 42.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Set seed}
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{42}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Make a vector of row indices called \texttt{rows}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Shuffle row indices: rows}
+\NormalTok{rows <-}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\KeywordTok{nrow}\NormalTok{(diamonds))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Randomly reorder the \texttt{diamonds} data frame.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Randomly order data}
+\NormalTok{diamonds <-}\StringTok{ }\NormalTok{diamonds[rows, ]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Try an 80/20 split}\label{try-an-8020-split}
+
+Now that your dataset is randomly ordered, you can split the first 80\%
+of it into a training set, and the last 20\% into a test set. You can do
+this by choosing a split point approximately 80\% of the way through
+your data:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{split <-}\StringTok{ }\KeywordTok{round}\NormalTok{(}\KeywordTok{nrow}\NormalTok{(mydata) }\OperatorTok{*}\StringTok{ }\FloatTok{0.80}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+You can then use this point to break off the first 80\% of the dataset
+as a training set:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mydata[}\DecValTok{1}\OperatorTok{:}\NormalTok{split, ]}
+\end{Highlighting}
+\end{Shaded}
+
+And then you can use that same point to determine the test set:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mydata[(split }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{)}\OperatorTok{:}\KeywordTok{nrow}\NormalTok{(mydata), ]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-2}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\begin{itemize}
+\tightlist
+\item
+  Choose a row index to split on so that the split point is
+  approximately 80\% of the way through the \texttt{diamonds} dataset.
+  Call this index \texttt{split}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Determine row to split on: split}
+\NormalTok{split <-}\StringTok{ }\KeywordTok{round}\NormalTok{(}\KeywordTok{nrow}\NormalTok{(diamonds)}\OperatorTok{*}\FloatTok{0.80}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Create a training set called \texttt{train} using that index.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Create train}
+\NormalTok{train <-}\StringTok{ }\NormalTok{diamonds[}\DecValTok{1}\OperatorTok{:}\NormalTok{split, ]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Create a test set called \texttt{test} using that index.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Create test}
+\NormalTok{test <-}\StringTok{ }\NormalTok{diamonds[(split }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{)}\OperatorTok{:}\KeywordTok{nrow}\NormalTok{(diamonds), ]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Predict on test set}\label{predict-on-test-set}
+
+Now that you have a randomly split training set and test set, you can
+use the \texttt{lm()} function as you did in the first exercise to fit a
+model to your training set, rather than the entire dataset. Recall that
+you can use the formula interface to the linear regression function to
+fit a model with a specified target variable using all other variables
+in the dataset as predictors:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mod <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ training_data)}
+\end{Highlighting}
+\end{Shaded}
+
+You can use the \texttt{predict()} function to make predictions from
+that model on new data. The new dataset must have all of the columns
+from the training data, but they can be in a different order with
+different values. Here, rather than re-predicting on the training set,
+you can predict on the test set, which you did not use for training the
+model. This will allow you to determine the \emph{out-of-sample error}
+for the model in the next exercise:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(model, }\DataTypeTok{newdata =}\NormalTok{ new_data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-3}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\begin{itemize}
+\tightlist
+\item
+  Fit an \texttt{lm()} model called \texttt{model} to predict price
+  using all other variables as covariates. Be sure to use the training
+  set, \texttt{train}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Fit lm model on train: model}
+\NormalTok{model <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(price }\OperatorTok{~}\StringTok{ }\NormalTok{. , }\DataTypeTok{data =}\NormalTok{ train)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Predict on the test set, test, using \texttt{predict()}. Store these
+  values in a vector called \texttt{p}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Predict on test: p}
+\NormalTok{p <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(model, }\DataTypeTok{newdata =}\NormalTok{ test, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Calculate test set RMSE}\label{calculate-test-set-rmse}
+
+Now that you have predictions on the test set, you can use these
+predictions to calculate an error metric (in this case RMSE) on the test
+set and see how the model performs out-of-sample, rather than in-sample
+as you did in the first exercise. You first do this by calculating the
+errors between the predicted diamond prices and the actual diamond
+prices by subtracting the predictions from the actual values.
+
+Once you have an error vector, calculating RMSE is as simple as squaring
+it, taking the mean, then taking the square root:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{sqrt}\NormalTok{(}\KeywordTok{mean}\NormalTok{(error}\OperatorTok{^}\DecValTok{2}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-4}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\begin{itemize}
+\tightlist
+\item
+  Calculate the error between the predictions on the test set and the
+  actual diamond prices in the test set. Call this \texttt{error}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Compute errors: error}
+\NormalTok{error <-}\StringTok{ }\NormalTok{test}\OperatorTok{$}\NormalTok{price }\OperatorTok{-}\StringTok{ }\NormalTok{p}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Calculate RMSE using this error vector, just printing the result to
+  the console.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Calculate RMSE}
+\NormalTok{RMSE <-}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\KeywordTok{mean}\NormalTok{(error}\OperatorTok{^}\DecValTok{2}\NormalTok{))}
+\NormalTok{RMSE}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 1136.596
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Comparing out-of-sample RMSE to in-sample
+RMSE}\label{comparing-out-of-sample-rmse-to-in-sample-rmse}
+\addcontentsline{toc}{subsection}{Comparing out-of-sample RMSE to
+in-sample RMSE}
+
+Why is the test set RMSE higher than the training set RMSE?
+
+\begin{itemize}
+\item
+  \textbf{Because you overfit the training set and the test set contains
+  data the model hasn't seen before.}
+\item
+  Because you should not use a test set at all and instead just look at
+  error on the training set.
+\item
+  Because the test set has a smaller sample size the training set and
+  thus the mean error is lower.
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Cross Valdiation Video}\label{cross-valdiation-video}
+\addcontentsline{toc}{subsection}{Cross Valdiation Video}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Advantage of
+cross-validation}\label{advantage-of-cross-validation}
+\addcontentsline{toc}{subsection}{Advantage of cross-validation}
+
+What is the advantage of cross-validation over a single train/test
+split?
+
+\begin{itemize}
+\item
+  There is no advantage to cross-validation, just as there is no
+  advantage to a single train/test split. You should be validating your
+  models in-sample with a metric like adjusted \(R^2\).
+\item
+  You can pick the best test set to minimize the reported RMSE of your
+  model.
+\item
+  \textbf{It gives you multiple estimates of out-of-sample error, rather
+  than a single estimate.}
+\end{itemize}
+
+Note: If all of your estimates give similar outputs, you can be more
+certain of the model's accuracy. If your estimates give different
+outputs, that tells you the model does not perform consistently and
+suggests a problem with it.
+
+\section{10-fold cross-validation}\label{fold-cross-validation}
+
+A better approach to validating models is to use multiple systematic
+test sets rather than a single random train/test split. Fortunately, the
+\texttt{caret} package written by \citet{R-caret} makes this very easy
+to do:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model <-}\StringTok{ }\KeywordTok{train}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\NormalTok{., my_data)}
+\end{Highlighting}
+\end{Shaded}
+
+\texttt{caret} supports many types of cross-validation, and you can
+specify which type of cross-validation and the number of
+cross-validation folds with the \texttt{trainControl()} function, which
+you pass to the \texttt{trControl} argument in \texttt{train()}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model <-}\StringTok{ }\KeywordTok{train}\NormalTok{(}
+\NormalTok{  y }\OperatorTok{~}\StringTok{ }\NormalTok{., my_data,}
+  \DataTypeTok{method =} \StringTok{"lm"}\NormalTok{,}
+  \DataTypeTok{trControl =} \KeywordTok{trainControl}\NormalTok{(}
+    \DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }\DataTypeTok{number =} \DecValTok{10}\NormalTok{,}
+    \DataTypeTok{verboseIter =} \OtherTok{TRUE}
+\NormalTok{  )}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+It is important to note that you pass the method for modeling to the
+main \texttt{train()} function and the method for cross-validation to
+the \texttt{trainControl()} function.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-5}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\begin{itemize}
+\tightlist
+\item
+  Load the \texttt{caret} package.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Load the caret package}
+\KeywordTok{library}\NormalTok{(caret)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Fit a linear regression to model price using all other variables in
+  the \texttt{diamonds} dataset as predictors. Use the \texttt{train()}
+  function and 10-fold cross-validation.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Fit lm model using 10-fold CV: model}
+\NormalTok{model <-}\StringTok{ }\KeywordTok{train}\NormalTok{(}
+\NormalTok{  price }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ diamonds,}
+  \DataTypeTok{method =} \StringTok{"lm"}\NormalTok{,}
+  \DataTypeTok{trControl =} \KeywordTok{trainControl}\NormalTok{(}
+    \DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }\DataTypeTok{number =} \DecValTok{10}\NormalTok{,}
+    \DataTypeTok{verboseIter =} \OtherTok{FALSE}
+\NormalTok{  )}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Print the model to the console and examine the results.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Print model to console}
+\NormalTok{model}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Linear Regression 
+
+53940 samples
+    9 predictor
+
+No pre-processing
+Resampling: Cross-Validated (10 fold) 
+Summary of sample sizes: 48547, 48546, 48546, 48545, 48545, 48545, ... 
+Resampling results:
+
+  RMSE      Rsquared   MAE     
+  1130.658  0.9197492  740.4646
+
+Tuning parameter 'intercept' was held constant at a value of TRUE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model}\OperatorTok{$}\NormalTok{finalModel  }\CommentTok{# show model coefficients }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+Call:
+lm(formula = .outcome ~ ., data = dat)
+
+Coefficients:
+(Intercept)        carat        cut.L        cut.Q        cut.C      `cut^4`  
+   5753.762    11256.978      584.457     -301.908      148.035      -20.794  
+    color.L      color.Q      color.C    `color^4`    `color^5`    `color^6`  
+  -1952.160     -672.054     -165.283       38.195      -95.793      -48.466  
+  clarity.L    clarity.Q    clarity.C  `clarity^4`  `clarity^5`  `clarity^6`  
+   4097.431    -1925.004      982.205     -364.918      233.563        6.883  
+`clarity^7`        depth        table            x            y            z  
+     90.640      -63.806      -26.474    -1008.261        9.609      -50.119  
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# summary(model)  # to see all}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{5-fold cross-validation}\label{fold-cross-validation-1}
+
+In this tutorial, you will use a wide variety of datasets to explore the
+full flexibility of the \texttt{caret} package. Here, you will use the
+famous \texttt{Boston} housing dataset, where the goal is to predict
+median home values in various Boston suburbs.
+
+You can use exactly the same code as in the previous exercise, but
+change the dataset used by the model:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model <-}\StringTok{ }\KeywordTok{train}\NormalTok{(}
+\NormalTok{  medv }\OperatorTok{~}\StringTok{ }\NormalTok{., Boston,}
+  \DataTypeTok{method =} \StringTok{"lm"}\NormalTok{,}
+  \DataTypeTok{trControl =} \KeywordTok{trainControl}\NormalTok{(}
+    \DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }\DataTypeTok{number =} \DecValTok{10}\NormalTok{,}
+    \DataTypeTok{verboseIter =} \OtherTok{FALSE}
+\NormalTok{  )}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Next, you can reduce the number of cross-validation folds from 10 to 5
+using the number argument to the \texttt{trainControl()} argument:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{trControl =}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}
+  \DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }\DataTypeTok{number =} \DecValTok{5}\NormalTok{,}
+  \DataTypeTok{verboseIter =} \OtherTok{TRUE}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-6}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\begin{itemize}
+\tightlist
+\item
+  Load the \texttt{MASS} package.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Load the MASS pacakge}
+\KeywordTok{library}\NormalTok{(MASS)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Fit an \texttt{lm()} model to the \texttt{Boston} housing dataset,
+  such that \texttt{medv} is the response variable and all other
+  variables are explanatory variables. Use 5-fold cross-validation
+  rather than 10-fold cross-validation.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Fit lm model using 5-fold CV: model}
+\NormalTok{model <-}\StringTok{ }\KeywordTok{train}\NormalTok{(}
+\NormalTok{  medv }\OperatorTok{~}\NormalTok{. , }\DataTypeTok{data =}\NormalTok{ Boston,}
+  \DataTypeTok{method =} \StringTok{"lm"}\NormalTok{,}
+  \DataTypeTok{trControl =} \KeywordTok{trainControl}\NormalTok{(}
+    \DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }\DataTypeTok{number =} \DecValTok{5}\NormalTok{,}
+    \DataTypeTok{verboseIter =} \OtherTok{FALSE}
+\NormalTok{  )}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Print the model to the console and inspect the results.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Print model to console}
+\NormalTok{model}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Linear Regression 
+
+506 samples
+ 13 predictor
+
+No pre-processing
+Resampling: Cross-Validated (5 fold) 
+Summary of sample sizes: 405, 403, 405, 406, 405 
+Resampling results:
+
+  RMSE      Rsquared   MAE     
+  4.794707  0.7290369  3.372915
+
+Tuning parameter 'intercept' was held constant at a value of TRUE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# show coefficients of model}
+\NormalTok{model}\OperatorTok{$}\NormalTok{finalModel }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+Call:
+lm(formula = .outcome ~ ., data = dat)
+
+Coefficients:
+(Intercept)         crim           zn        indus         chas          nox  
+  3.646e+01   -1.080e-01    4.642e-02    2.056e-02    2.687e+00   -1.777e+01  
+         rm          age          dis          rad          tax      ptratio  
+  3.810e+00    6.922e-04   -1.476e+00    3.060e-01   -1.233e-02   -9.527e-01  
+      black        lstat  
+  9.312e-03   -5.248e-01  
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+Call:
+lm(formula = .outcome ~ ., data = dat)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-15.595  -2.730  -0.518   1.777  26.199 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  3.646e+01  5.103e+00   7.144 3.28e-12 ***
+crim        -1.080e-01  3.286e-02  -3.287 0.001087 ** 
+zn           4.642e-02  1.373e-02   3.382 0.000778 ***
+indus        2.056e-02  6.150e-02   0.334 0.738288    
+chas         2.687e+00  8.616e-01   3.118 0.001925 ** 
+nox         -1.777e+01  3.820e+00  -4.651 4.25e-06 ***
+rm           3.810e+00  4.179e-01   9.116  < 2e-16 ***
+age          6.922e-04  1.321e-02   0.052 0.958229    
+dis         -1.476e+00  1.995e-01  -7.398 6.01e-13 ***
+rad          3.060e-01  6.635e-02   4.613 5.07e-06 ***
+tax         -1.233e-02  3.760e-03  -3.280 0.001112 ** 
+ptratio     -9.527e-01  1.308e-01  -7.283 1.31e-12 ***
+black        9.312e-03  2.686e-03   3.467 0.000573 ***
+lstat       -5.248e-01  5.072e-02 -10.347  < 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 4.745 on 492 degrees of freedom
+Multiple R-squared:  0.7406,    Adjusted R-squared:  0.7338 
+F-statistic: 108.1 on 13 and 492 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{\texorpdfstring{\(5 \times 5\)-fold
+cross-validation}{5 \textbackslash{}times 5-fold cross-validation}}\label{times-5-fold-cross-validation}
+
+You can do more than just one iteration of cross-validation. Repeated
+cross-validation gives you a better estimate of the test-set error. You
+can also repeat the entire cross-validation procedure. This takes
+longer, but gives you many more out-of-sample datasets to look at and
+much more precise assessments of how well the model performs.
+
+One of the awesome things about the \texttt{train()} function in
+\texttt{caret} is how easy it is to run very different models or methods
+of cross-validation just by tweaking a few simple arguments to the
+function call. For example, you could repeat your entire
+cross-validation procedure 5 times for greater confidence in your
+estimates of the model's out-of-sample accuracy, e.g.:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{trControl =}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}
+  \DataTypeTok{method =} \StringTok{"repeatedcv"}\NormalTok{, }\DataTypeTok{number =} \DecValTok{5}\NormalTok{,}
+  \DataTypeTok{repeats =} \DecValTok{5}\NormalTok{, }\DataTypeTok{verboseIter =} \OtherTok{TRUE}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-7}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\begin{itemize}
+\tightlist
+\item
+  Re-fit the linear regression model to the \texttt{Boston} housing
+  dataset. Use 5 repeats of 5-fold cross-validation.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Fit lm model using 5 x 5-fold CV: model}
+\NormalTok{model <-}\StringTok{ }\KeywordTok{train}\NormalTok{(}
+\NormalTok{  medv }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ Boston,}
+  \DataTypeTok{method =} \StringTok{"lm"}\NormalTok{,}
+  \DataTypeTok{trControl =} \KeywordTok{trainControl}\NormalTok{(}
+    \DataTypeTok{method =} \StringTok{"repeatedcv"}\NormalTok{, }\DataTypeTok{number =} \DecValTok{5}\NormalTok{,}
+    \DataTypeTok{repeats =} \DecValTok{5}\NormalTok{, }\DataTypeTok{verboseIter =} \OtherTok{FALSE}
+\NormalTok{  )}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Print the model to the console.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Print model to console}
+\NormalTok{model}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Linear Regression 
+
+506 samples
+ 13 predictor
+
+No pre-processing
+Resampling: Cross-Validated (5 fold, repeated 5 times) 
+Summary of sample sizes: 405, 405, 404, 405, 405, 406, ... 
+Resampling results:
+
+  RMSE      Rsquared   MAE     
+  4.870744  0.7259058  3.400369
+
+Tuning parameter 'intercept' was held constant at a value of TRUE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+Call:
+lm(formula = .outcome ~ ., data = dat)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-15.595  -2.730  -0.518   1.777  26.199 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  3.646e+01  5.103e+00   7.144 3.28e-12 ***
+crim        -1.080e-01  3.286e-02  -3.287 0.001087 ** 
+zn           4.642e-02  1.373e-02   3.382 0.000778 ***
+indus        2.056e-02  6.150e-02   0.334 0.738288    
+chas         2.687e+00  8.616e-01   3.118 0.001925 ** 
+nox         -1.777e+01  3.820e+00  -4.651 4.25e-06 ***
+rm           3.810e+00  4.179e-01   9.116  < 2e-16 ***
+age          6.922e-04  1.321e-02   0.052 0.958229    
+dis         -1.476e+00  1.995e-01  -7.398 6.01e-13 ***
+rad          3.060e-01  6.635e-02   4.613 5.07e-06 ***
+tax         -1.233e-02  3.760e-03  -3.280 0.001112 ** 
+ptratio     -9.527e-01  1.308e-01  -7.283 1.31e-12 ***
+black        9.312e-03  2.686e-03   3.467 0.000573 ***
+lstat       -5.248e-01  5.072e-02 -10.347  < 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 4.745 on 492 degrees of freedom
+Multiple R-squared:  0.7406,    Adjusted R-squared:  0.7338 
+F-statistic: 108.1 on 13 and 492 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Making predictions on new
+data}\label{making-predictions-on-new-data}
+
+Finally, the model you fit with the \texttt{train()} function has the
+exact same \texttt{predict()} interface as the linear regression models
+you fit earlier.
+
+After fitting a model with \texttt{train()}, you can call
+\texttt{predict()} with new data, e.g:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{predict}\NormalTok{(my_model, }\DataTypeTok{newdata =}\NormalTok{ new_data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-8}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\begin{itemize}
+\tightlist
+\item
+  Use the \texttt{predict()} function to make predictions with
+  \texttt{model} on the full \texttt{Boston} housing dataset. Print the
+  result to the console.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Predict on full Boston dataset}
+\KeywordTok{head}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model, }\DataTypeTok{newdata =}\NormalTok{ Boston))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+       1        2        3        4        5        6 
+30.00384 25.02556 30.56760 28.60704 27.94352 25.25628 
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{tail}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model, }\DataTypeTok{newdata =}\NormalTok{ Boston))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+     501      502      503      504      505      506 
+20.46871 23.53334 22.37572 27.62743 26.12797 22.34421 
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\chapter{Classification models: fitting them and evaluating their
+performance}\label{classification-models-fitting-them-and-evaluating-their-performance}
+
+In this chapter, you'll fit classification models with \texttt{train()}
+and evaluate their out-of-sample performance using cross-validation and
+area under the curve (AUC).
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Logistic regression on sonar
+video}\label{logistic-regression-on-sonar-video}
+\addcontentsline{toc}{subsection}{Logistic regression on sonar video}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Why a train/test split?}\label{why-a-traintest-split}
+\addcontentsline{toc}{subsection}{Why a train/test split?}
+
+What is the point of making a train/test split for binary classification
+problems?
+
+\begin{itemize}
+\item
+  To make the problem harder for the model by reducing the dataset size.
+\item
+  \textbf{To evaluate your models out-of-sample, on new data.}
+\item
+  To reduce the dataset size, so your models fit faster.
+\item
+  There is no real reason; it is no different than evaluating your
+  models in-sample.
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Try a 60/40 split}\label{try-a-6040-split}
+
+As you saw in the video, you'll be working with the \texttt{Sonar}
+dataset in this chapter, using a 60\% training set and a 40\% test set.
+We'll practice making a train/test split one more time, just to be sure
+you have the hang of it. Recall that you can use the \texttt{sample()}
+function to get a random permutation of the row indices in a dataset, to
+use when making train/test splits, e.g.:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rows <-}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\KeywordTok{nrow}\NormalTok{(my_data))}
+\end{Highlighting}
+\end{Shaded}
+
+And then use those row indices to randomly reorder the dataset, e.g.:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{my_data <-}\StringTok{ }\NormalTok{my_data[rows, ]}
+\end{Highlighting}
+\end{Shaded}
+
+Once your dataset is randomly ordered, you can split off the first 60\%
+as a training set and the last 40\% as a test set.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-9}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\begin{itemize}
+\tightlist
+\item
+  Shuffle the row indices of \texttt{Sonar} and store the result in
+  \texttt{rows}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(mlbench)}
+\KeywordTok{data}\NormalTok{(Sonar)}
+\CommentTok{# Shuffle row indices: rows}
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{421}\NormalTok{)}
+\NormalTok{rows <-}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\KeywordTok{nrow}\NormalTok{(Sonar))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Use \texttt{rows} to randomly reorder the rows of \texttt{Sonar}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Randomly order data}
+\NormalTok{Sonar <-}\StringTok{ }\NormalTok{Sonar[rows, ]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Identify the proper row to split on for a 60/40 split. Store this row
+  number as \texttt{split}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Identify row to split on: split}
+\NormalTok{split <-}\StringTok{ }\KeywordTok{round}\NormalTok{(}\KeywordTok{nrow}\NormalTok{(Sonar)}\OperatorTok{*}\NormalTok{.}\DecValTok{60}\NormalTok{, }\DecValTok{0}\NormalTok{)}
+\NormalTok{split}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 125
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  Save the first 60\% as a training set.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Create train}
+\NormalTok{train <-}\StringTok{ }\NormalTok{Sonar[}\DecValTok{1}\OperatorTok{:}\NormalTok{split, ]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Save the last 40\% as the test set.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Create test}
+\NormalTok{test <-}\StringTok{ }\NormalTok{Sonar[(split}\OperatorTok{+}\DecValTok{1}\NormalTok{)}\OperatorTok{:}\KeywordTok{nrow}\NormalTok{(Sonar), ]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Fit a logistic regression
+model}\label{fit-a-logistic-regression-model}
+
+Once you have your random training and test sets you can fit a logistic
+regression model to your training set using the \texttt{glm()} function.
+\texttt{glm()} is a more advanced version of \texttt{lm()} that allows
+for more varied types of regression models, aside from plain vanilla
+ordinary least squares regression.
+
+Be sure to pass the argument \texttt{family\ =\ "binomial"} to
+\texttt{glm()} to specify that you want to do logistic (rather than
+linear) regression. For example:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{glm}\NormalTok{(Target }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{, dataset)}
+\end{Highlighting}
+\end{Shaded}
+
+Don't worry about warnings like
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{glm.fit}\OperatorTok{:}\StringTok{ }\NormalTok{algorithm did not converge or glm.fit}\OperatorTok{:}\StringTok{ }\NormalTok{fitted probabilities numerically }\DecValTok{0}\NormalTok{ or }\DecValTok{1}\NormalTok{ occurred}
+\end{Highlighting}
+\end{Shaded}
+
+These are common on smaller datasets and usually don't cause any issues.
+They typically mean your dataset is perfectly separable, which can cause
+problems for the math behind the model, but R's \texttt{glm()} function
+is almost always robust enough to handle this case with no problems.
+
+Once you have a \texttt{glm()} model fit to your dataset, you can
+predict the outcome (e.g.~rock or mine) on the test set using the
+\texttt{predict()} function with the argument
+\texttt{type\ =\ "response"}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{predict}\NormalTok{(my_model, test, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-10}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\begin{itemize}
+\tightlist
+\item
+  Fit a logistic regression called \texttt{model} to predict
+  \texttt{Class} using all other variables as predictors. Use the
+  training set for \texttt{Sonar}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Fit glm model: model}
+\NormalTok{model <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(Class }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ train, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Warning: glm.fit: algorithm did not converge
+\end{verbatim}
+
+\begin{verbatim}
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  Predict on the \texttt{test} set using that model. Call the result
+  \texttt{p} like you've done before.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Predict on test: p}
+\NormalTok{p <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(model, }\DataTypeTok{newdata =}\NormalTok{ test, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Confusion matrix video}\label{confusion-matrix-video}
+\addcontentsline{toc}{subsection}{Confusion matrix video}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Confusion Matrix}\label{confusion-matrix}
+\addcontentsline{toc}{subsection}{Confusion Matrix}
+
+See \url{https://en.wikipedia.org/wiki/Confusion_matrix} for a table and
+formulas.
+
+\subsection*{Confusion matrix
+takeaways}\label{confusion-matrix-takeaways}
+\addcontentsline{toc}{subsection}{Confusion matrix takeaways}
+
+What information does a confusion matrix provide?
+
+\begin{itemize}
+\item
+  True positive rates
+\item
+  True negative rates
+\item
+  False positive rates
+\item
+  False negative rates
+\item
+  \textbf{All of the above}
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Calculate a confusion
+matrix}\label{calculate-a-confusion-matrix}
+
+As you saw in the video, a confusion matrix is a very useful tool for
+calibrating the output of a model and examining all possible outcomes of
+your predictions (true positive, true negative, false positive, false
+negative).
+
+Before you make your confusion matrix, you need to ``cut'' your
+predicted probabilities at a given threshold to turn probabilities into
+a factor of class predictions. Combine \texttt{ifelse()} with
+\texttt{factor()} as follows:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pos_or_neg <-}\StringTok{ }\KeywordTok{ifelse}\NormalTok{(probability_prediction }\OperatorTok{>}\StringTok{ }\NormalTok{threshold, positive_class, negative_class)}
+\NormalTok{p_class <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(pos_or_neg, }\DataTypeTok{levels =} \KeywordTok{levels}\NormalTok{(test_values))}
+\end{Highlighting}
+\end{Shaded}
+
+\texttt{confusionMatrix()} in caret improves on \texttt{table()} from
+base \texttt{R} by adding lots of useful ancillary statistics in
+addition to the base rates in the table. You can calculate the confusion
+matrix (and the associated statistics) using the predicted outcomes as
+well as the actual outcomes, e.g.:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{confusionMatrix}\NormalTok{(p_class, test_values)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-11}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\begin{itemize}
+\tightlist
+\item
+  Use \texttt{ifelse()} to create a character vector, \texttt{m\_or\_r}
+  that is the positive class, \texttt{"M"}, when \texttt{p} is greater
+  than 0.5, and the negative class, \texttt{"R"}, otherwise.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(caret)}
+\CommentTok{# Calculate class probabilities: p_class}
+\NormalTok{m_or_r <-}\StringTok{ }\KeywordTok{ifelse}\NormalTok{(p }\OperatorTok{>}\StringTok{ }\FloatTok{0.50}\NormalTok{, }\StringTok{"M"}\NormalTok{, }\StringTok{"R"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Convert \texttt{m\_or\_r} to be a factor, \texttt{p\_class}, with
+  levels the same as those of \texttt{test{[}{[}"Class"{]}{]}}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p_class <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(m_or_r, }\DataTypeTok{levels =} \KeywordTok{levels}\NormalTok{(test[[}\StringTok{"Class"}\NormalTok{]]))}
+\CommentTok{# OR}
+\NormalTok{p_class <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(m_or_r, }\DataTypeTok{levels =} \KeywordTok{c}\NormalTok{(}\StringTok{"M"}\NormalTok{, }\StringTok{"R"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Make a confusion matrix with \texttt{confusionMatrix()}, passing
+  \texttt{p\_class} and the \texttt{"Class"} column from the
+  \texttt{test} dataset.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Create confusion matrix}
+\NormalTok{caret}\OperatorTok{::}\KeywordTok{confusionMatrix}\NormalTok{(p_class, test}\OperatorTok{$}\NormalTok{Class)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Confusion Matrix and Statistics
+
+          Reference
+Prediction  M  R
+         M 11 29
+         R 33 10
+                                          
+               Accuracy : 0.253           
+                 95% CI : (0.1639, 0.3604)
+    No Information Rate : 0.5301          
+    P-Value [Acc > NIR] : 1.0000          
+                                          
+                  Kappa : -0.4907         
+                                          
+ Mcnemar's Test P-Value : 0.7032          
+                                          
+            Sensitivity : 0.2500          
+            Specificity : 0.2564          
+         Pos Pred Value : 0.2750          
+         Neg Pred Value : 0.2326          
+             Prevalence : 0.5301          
+         Detection Rate : 0.1325          
+   Detection Prevalence : 0.4819          
+      Balanced Accuracy : 0.2532          
+                                          
+       'Positive' Class : M               
+                                          
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Using table()}
+\KeywordTok{table}\NormalTok{(p_class, test}\OperatorTok{$}\NormalTok{Class)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+       
+p_class  M  R
+      M 11 29
+      R 33 10
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Using xtabs()}
+\KeywordTok{xtabs}\NormalTok{(}\OperatorTok{~}\NormalTok{p_class }\OperatorTok{+}\StringTok{ }\NormalTok{test}\OperatorTok{$}\NormalTok{Class)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+       test$Class
+p_class  M  R
+      M 11 29
+      R 33 10
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-12}
+\addcontentsline{toc}{subsection}{Exercise}
+
+Calculating accuracy---Use
+\texttt{confusionMatrix(p\_class,\ test{[}{[}"Class"{]}{]})} to
+calculate a confusion matrix on the test set.
+
+\begin{itemize}
+\tightlist
+\item
+  What is the test set accuracy of this model (rounded to the nearest
+  percent)?
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{RES <-}\StringTok{ }\NormalTok{caret}\OperatorTok{::}\KeywordTok{confusionMatrix}\NormalTok{(p_class, test[[}\StringTok{"Class"}\NormalTok{]])}
+\NormalTok{RES}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Confusion Matrix and Statistics
+
+          Reference
+Prediction  M  R
+         M 11 29
+         R 33 10
+                                          
+               Accuracy : 0.253           
+                 95% CI : (0.1639, 0.3604)
+    No Information Rate : 0.5301          
+    P-Value [Acc > NIR] : 1.0000          
+                                          
+                  Kappa : -0.4907         
+                                          
+ Mcnemar's Test P-Value : 0.7032          
+                                          
+            Sensitivity : 0.2500          
+            Specificity : 0.2564          
+         Pos Pred Value : 0.2750          
+         Neg Pred Value : 0.2326          
+             Prevalence : 0.5301          
+         Detection Rate : 0.1325          
+   Detection Prevalence : 0.4819          
+      Balanced Accuracy : 0.2532          
+                                          
+       'Positive' Class : M               
+                                          
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{RES}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Accuracy 
+0.253012 
+\end{verbatim}
+
+The accuracy of this model is 25.3\%.
+
+\begin{itemize}
+\tightlist
+\item
+  What is the test set true positive rate (or sensitivity) of this model
+  (rounded to the nearest percent)?
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Sens <-}\StringTok{ }\KeywordTok{round}\NormalTok{(RES[[}\DecValTok{4}\NormalTok{]][}\StringTok{"Sensitivity"}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\NormalTok{Sens}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Sensitivity 
+         25 
+\end{verbatim}
+
+The test set sensitivity of this model is 25\%.
+
+\begin{itemize}
+\tightlist
+\item
+  What is the test set true negative rate (or specificity) of this model
+  (rounded to the nearest percent)?
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Spec <-}\StringTok{ }\KeywordTok{round}\NormalTok{(RES[[}\DecValTok{4}\NormalTok{]][}\StringTok{"Specificity"}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\NormalTok{Spec}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Specificity 
+       25.6 
+\end{verbatim}
+
+The test set specificity of this model is 25.6\%.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Class probabilities and predictions
+video}\label{class-probabilities-and-predictions-video}
+\addcontentsline{toc}{subsection}{Class probabilities and predictions
+video}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-13}
+\addcontentsline{toc}{subsection}{Exercise}
+
+Probabilities and classes---What's the relationship between the
+predicted probabilities and the predicted classes?
+
+\begin{itemize}
+\item
+  You determine the predicted probabilities by looking at the average
+  accuracy of the predicted classes.
+\item
+  There is no relationship; they're completely different things.
+\item
+  \textbf{Predicted classes are based off of predicted probabilities
+  plus a classification threshold.}
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Try another threshold}\label{try-another-threshold}
+
+In the previous exercises, you used a threshold of 0.50 to cut your
+predicted probabilities to make class predictions (rock vs mine).
+However, this classification threshold does not always align with the
+goals for a given modeling problem.
+
+For example, pretend you want to identify the objects you are really
+certain are mines. In this case, you might want to use a probability
+threshold of 0.90 to get fewer predicted mines, but with greater
+confidence in each prediction.
+
+\begin{itemize}
+\tightlist
+\item
+  Use \texttt{ifelse()} to create a character vector, \texttt{m\_or\_r}
+  that is the positive class, \texttt{"M"}, when \texttt{p} is greater
+  than 0.9, and the negative class, \texttt{"R"}, otherwise.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Apply threshold of 0.9}
+\NormalTok{m_or_r <-}\StringTok{ }\KeywordTok{ifelse}\NormalTok{(p }\OperatorTok{>}\StringTok{ }\FloatTok{0.90}\NormalTok{, }\StringTok{"M"}\NormalTok{, }\StringTok{"R"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Convert \texttt{m\_or\_r} to be a factor, \texttt{p\_class}, with
+  levels the same as those of \texttt{test{[}{[}"Class"{]}{]}}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p_class <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(m_or_r, }\DataTypeTok{levels =} \KeywordTok{levels}\NormalTok{(test[[}\StringTok{"Class"}\NormalTok{]]))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Make a confusion matrix with \texttt{confusionMatrix()}, passing
+  \texttt{p\_class} and the \texttt{"Class"} column from the
+  \texttt{test} dataset.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Create confusion matrix}
+\KeywordTok{confusionMatrix}\NormalTok{(p_class, test[[}\StringTok{"Class"}\NormalTok{]])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Confusion Matrix and Statistics
+
+          Reference
+Prediction  M  R
+         M 10 27
+         R 34 12
+                                          
+               Accuracy : 0.2651          
+                 95% CI : (0.1742, 0.3734)
+    No Information Rate : 0.5301          
+    P-Value [Acc > NIR] : 1.0000          
+                                          
+                  Kappa : -0.4603         
+                                          
+ Mcnemar's Test P-Value : 0.4424          
+                                          
+            Sensitivity : 0.2273          
+            Specificity : 0.3077          
+         Pos Pred Value : 0.2703          
+         Neg Pred Value : 0.2609          
+             Prevalence : 0.5301          
+         Detection Rate : 0.1205          
+   Detection Prevalence : 0.4458          
+      Balanced Accuracy : 0.2675          
+                                          
+       'Positive' Class : M               
+                                          
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{From probabilites to confusion
+matrix}\label{from-probabilites-to-confusion-matrix}
+
+Conversely, say you want to be really certain that your model correctly
+identifies all the mines as mines. In this case, you might use a
+prediction threshold of 0.10, instead of 0.90.
+
+\begin{itemize}
+\tightlist
+\item
+  Use \texttt{ifelse()} to create a character vector, \texttt{m\_or\_r}
+  that is the positive class, \texttt{"M"}, when \texttt{p} is greater
+  than 0.1, and the negative class, \texttt{"R"}, otherwise.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Apply threshold of 0.1}
+\NormalTok{m_or_r <-}\StringTok{ }\KeywordTok{ifelse}\NormalTok{(p }\OperatorTok{>}\StringTok{ }\FloatTok{0.10}\NormalTok{, }\StringTok{"M"}\NormalTok{, }\StringTok{"R"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Convert \texttt{m\_or\_r} to be a factor, \texttt{p\_class}, with
+  levels the same as those of \texttt{test{[}{[}"Class"{]}{]}}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p_class <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(m_or_r, }\DataTypeTok{levels =} \KeywordTok{levels}\NormalTok{(test[[}\StringTok{"Class"}\NormalTok{]]))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Make a confusion matrix with \texttt{confusionMatrix()}, passing
+  \texttt{p\_class} and the \texttt{"Class"} column from the
+  \texttt{test} dataset.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Create confusion matrix}
+\KeywordTok{confusionMatrix}\NormalTok{(p_class, test[[}\StringTok{"Class"}\NormalTok{]])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Confusion Matrix and Statistics
+
+          Reference
+Prediction  M  R
+         M 11 30
+         R 33  9
+                                          
+               Accuracy : 0.241           
+                 95% CI : (0.1538, 0.3473)
+    No Information Rate : 0.5301          
+    P-Value [Acc > NIR] : 1.0000          
+                                          
+                  Kappa : -0.517          
+                                          
+ Mcnemar's Test P-Value : 0.8011          
+                                          
+            Sensitivity : 0.2500          
+            Specificity : 0.2308          
+         Pos Pred Value : 0.2683          
+         Neg Pred Value : 0.2143          
+             Prevalence : 0.5301          
+         Detection Rate : 0.1325          
+   Detection Prevalence : 0.4940          
+      Balanced Accuracy : 0.2404          
+                                          
+       'Positive' Class : M               
+                                          
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Introducing the ROC curve
+video}\label{introducing-the-roc-curve-video}
+\addcontentsline{toc}{subsection}{Introducing the ROC curve video}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{What's the value of a ROC
+curve?}\label{whats-the-value-of-a-roc-curve}
+\addcontentsline{toc}{subsection}{What's the value of a ROC curve?}
+
+What is the primary value of an ROC curve?
+
+\begin{itemize}
+\item
+  It has a cool acronym.
+\item
+  It can be used to determine the true positive and false positive rates
+  for a particular classification threshold.
+\item
+  \textbf{It evaluates all possible thresholds for splitting predicted
+  probabilities into predicted classes.}
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Plot an ROC curve}\label{plot-an-roc-curve}
+
+As you saw in the video, an ROC curve is a really useful shortcut for
+summarizing the performance of a classifier over all possible
+thresholds. This saves you a lot of tedious work computing class
+predictions for many different thresholds and examining the confusion
+matrix for each.
+
+My favorite package for computing ROC curves is \texttt{caTools} written
+by \citet{R-caTools}, which contains a function called
+\texttt{colAUC()}. This function is very user-friendly and can actually
+calculate ROC curves for multiple predictors at once. In this case, you
+only need to calculate the ROC curve for one predictor, e.g.:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{colAUC}\NormalTok{(predicted_probabilities, actual, }\DataTypeTok{plotROC =} \OtherTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+The function will return a score called AUC (more on that later) and the
+\texttt{plotROC\ =\ TRUE} argument will return the plot of the ROC curve
+for visual inspection.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-14}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\begin{itemize}
+\tightlist
+\item
+  Predict probabilities (i.e. \texttt{type\ =\ "response"}) on the
+  \texttt{test} set, then store the result as \texttt{p}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(caTools)}
+\CommentTok{# Predict on test: p}
+\NormalTok{p <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(model, }\DataTypeTok{newdata =}\NormalTok{ test, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Make an ROC curve using the predicted test set probabilities.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{colAUC}\NormalTok{(p, test}\OperatorTok{$}\NormalTok{Class, }\DataTypeTok{plotROC =} \OtherTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{MachineLearningToolboxSC_files/figure-latex/unnamed-chunk-67-1} \end{center}
+
+\begin{verbatim}
+             [,1]
+M vs. R 0.7645688
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Area under the curve (AUC)
+video}\label{area-under-the-curve-auc-video}
+\addcontentsline{toc}{subsection}{Area under the curve (AUC) video}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Model, ROC, and AUC}\label{model-roc-and-auc}
+\addcontentsline{toc}{subsection}{Model, ROC, and AUC}
+
+What is the AUC of a perfect model?
+
+\begin{itemize}
+\item
+  0.00
+\item
+  0.50
+\item
+  \textbf{1.00}
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{\texorpdfstring{Customizing
+\texttt{trainControl}}{Customizing trainControl}}\label{customizing-traincontrol}
+
+As you saw in the video, area under the ROC curve is a very useful,
+single-number summary of a model's ability to discriminate the positive
+from the negative class (e.g.~mines from rocks). An AUC of 0.5 is no
+better than random guessing, an AUC of 1.0 is a perfectly predictive
+model, and an AUC of 0.0 is perfectly anti-predictive (which rarely
+happens).
+
+This is often a much more useful metric than simply ranking models by
+their accuracy at a set threshold, as different models might require
+different calibration steps (looking at a confusion matrix at each step)
+to find the optimal classification threshold for that model.
+
+You can use the \texttt{trainControl()} function in \texttt{caret} to
+use AUC (instead of accuracy), to tune the parameters of your models.
+The \texttt{twoClassSummary()} convenience function allows you to do
+this easily.
+
+When using \texttt{twoClassSummary()}, be sure to always include the
+argument \texttt{classProbs\ =\ TRUE} or your model will throw an error!
+(You cannot calculate AUC with just class predictions. You need to have
+class probabilities as well.)
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-15}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\begin{itemize}
+\item
+  Customize the \texttt{trainControl} object to use
+  \texttt{twoClassSummary} rather than \texttt{defaultSummary}.
+\item
+  Use 10-fold cross-validation.
+\item
+  Be sure to tell \texttt{trainControl()}to return class probabilities.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Create trainControl object: myControl}
+\NormalTok{myControl <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}
+  \DataTypeTok{method =} \StringTok{"cv"}\NormalTok{,}
+  \DataTypeTok{number =} \DecValTok{10}\NormalTok{,}
+  \DataTypeTok{summaryFunction =}\NormalTok{ twoClassSummary,}
+  \DataTypeTok{classProbs =} \OtherTok{TRUE}\NormalTok{, }\CommentTok{# IMPORTANT!}
+  \DataTypeTok{verboseIter =} \OtherTok{FALSE}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{\texorpdfstring{Using custom
+\texttt{trainControl}}{Using custom trainControl}}\label{using-custom-traincontrol}
+
+Now that you have a custom \texttt{trainControl} object, it's easy to
+fit caret models that use AUC rather than accuracy to tune and evaluate
+the model. You can just pass your custom \texttt{trainControl} object to
+the \texttt{train()} function via the \texttt{trControl} argument, e.g.:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{train}\NormalTok{(}\OperatorTok{<}\NormalTok{standard arguments here}\OperatorTok{>}\NormalTok{, }\DataTypeTok{trControl =}\NormalTok{ myControl)}
+\end{Highlighting}
+\end{Shaded}
+
+This syntax gives you a convenient way to store a lot of custom modeling
+parameters and then use them across multiple different calls to
+\texttt{train()}. You will make extensive use of this trick in Chapter
+5.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-16}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\begin{itemize}
+\tightlist
+\item
+  Use \texttt{train()} to fit a glm model (i.e.
+  \texttt{method\ =\ "glm"}) to \texttt{Sonar} using your custom
+  \texttt{trainControl} object, \texttt{myControl}. You want to predict
+  \texttt{Class} from all other variables in the data (i.e.
+  \texttt{Class\ \textasciitilde{}\ .}). Save the result to
+  \texttt{model}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Train glm with custom trainControl: model}
+\NormalTok{model <-}\StringTok{ }\KeywordTok{train}\NormalTok{(Class }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ Sonar, }
+               \DataTypeTok{method =} \StringTok{"glm"}\NormalTok{, }
+               \DataTypeTok{trControl =}\NormalTok{ myControl)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Print the \texttt{model} to the console and examine its output.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Print model to console}
+\NormalTok{model}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Generalized Linear Model 
+
+208 samples
+ 60 predictor
+  2 classes: 'M', 'R' 
+
+No pre-processing
+Resampling: Cross-Validated (10 fold) 
+Summary of sample sizes: 187, 187, 187, 187, 187, 187, ... 
+Resampling results:
+
+  ROC       Sens       Spec     
+  0.726835  0.7462121  0.6633333
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\chapter{Tuning model parameters to improve
+performance}\label{tuning-model-parameters-to-improve-performance}
+
+In this chapter, you will use the \texttt{train()} function to tweak
+model parameters through cross-validation and grid search.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Random forests and wine
+video}\label{random-forests-and-wine-video}
+\addcontentsline{toc}{subsection}{Random forests and wine video}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Random forests vs.~linear
+models}\label{random-forests-vs.linear-models}
+\addcontentsline{toc}{subsection}{Random forests vs.~linear models}
+
+What's the primary advantage of random forests over linear models?
+
+\begin{itemize}
+\item
+  They make you sound cooler during job interviews.
+\item
+  You can't understand what's going on inside of a random forest model,
+  so you don't have to explain it to anyone.
+\item
+  \textbf{A random forest is a more flexible model than a linear model,
+  but just as easy to fit.}
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Fit a random forest}\label{fit-a-random-forest}
+
+As you saw in the video, random forest models are much more flexible
+than linear models, and can model complicated nonlinear effects as well
+as automatically capture interactions between variables. They tend to
+give very good results on real world data, so let's try one out on the
+\texttt{wine} quality dataset, where the goal is to predict the
+human-evaluated quality of a batch of wine, given some of the
+machine-measured chemical and physical properties of that batch.
+
+Fitting a random forest model is exactly the same as fitting a
+generalized linear regression model, as you did in the previous chapter.
+You simply change the method argument in the train function to be
+\texttt{"ranger"}. The \texttt{ranger} package written by
+\citet{R-ranger} is a rewrite of R's classic \texttt{randomForest}
+package written by \citet{R-randomForest} and fits models much faster,
+but gives almost exactly the same results. We suggest that all beginners
+use the \texttt{ranger} package for random forest modeling.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-17}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\begin{itemize}
+\item
+  Train a random forest called \texttt{model} on the wine quality
+  dataset, \texttt{wine}, such that \texttt{quality} is the response
+  variable and all other variables are explanatory variables. Data is
+  available from
+  \url{https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/}.
+\item
+  Use \texttt{method\ =\ "ranger"}.
+\item
+  Use a \texttt{tuneLength} of 1.
+\item
+  Use 5 CV folds.
+\item
+  Print \texttt{model} to the console.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(caret)}
+\CommentTok{# Load wine data set}
+\NormalTok{wine <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"./Data/wine_dataset.csv"}\NormalTok{)}
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{42}\NormalTok{)}
+\CommentTok{# Fit random forest: model}
+\NormalTok{model <-}\StringTok{ }\KeywordTok{train}\NormalTok{(}
+\NormalTok{  quality }\OperatorTok{~}\NormalTok{.,}
+  \DataTypeTok{tuneLength =} \DecValTok{1}\NormalTok{,}
+  \DataTypeTok{data =}\NormalTok{ wine, }
+  \DataTypeTok{method =} \StringTok{"ranger"}\NormalTok{,}
+  \DataTypeTok{trControl =} \KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }
+                           \DataTypeTok{number =} \DecValTok{5}\NormalTok{, }
+                           \DataTypeTok{verboseIter =} \OtherTok{FALSE}\NormalTok{)}
+\NormalTok{)}
+
+\CommentTok{# Print model to console}
+\NormalTok{model}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Random Forest 
+
+6497 samples
+  12 predictor
+
+No pre-processing
+Resampling: Cross-Validated (5 fold) 
+Summary of sample sizes: 5199, 5197, 5198, 5197, 5197 
+Resampling results across tuning parameters:
+
+  splitrule   RMSE       Rsquared   MAE      
+  variance    0.5994113  0.5374130  0.4347958
+  extratrees  0.6111844  0.5279777  0.4558074
+
+Tuning parameter 'mtry' was held constant at a value of 3
+Tuning
+ parameter 'min.node.size' was held constant at a value of 5
+RMSE was used to select the optimal model using the smallest value.
+The final values used for the model were mtry = 3, splitrule = variance
+ and min.node.size = 5.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model}\OperatorTok{$}\NormalTok{finalModel}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Ranger result
+
+Call:
+ ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = min(param$mtry, ncol(x)), min.node.size = param$min.node.size,      splitrule = as.character(param$splitrule), write.forest = TRUE,      probability = classProbs, ...) 
+
+Type:                             Regression 
+Number of trees:                  500 
+Sample size:                      6497 
+Number of independent variables:  12 
+Mtry:                             3 
+Target node size:                 5 
+Variable importance mode:         none 
+Splitrule:                        variance 
+OOB prediction error (MSE):       0.337557 
+R squared (OOB):                  0.5573457 
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Explore a wider model space
+video}\label{explore-a-wider-model-space-video}
+\addcontentsline{toc}{subsection}{Explore a wider model space video}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Advantage of a longer tune
+length}\label{advantage-of-a-longer-tune-length}
+\addcontentsline{toc}{subsection}{Advantage of a longer tune length}
+
+What's the advantage of a longer \texttt{tuneLength}?
+
+\begin{itemize}
+\item
+  \textbf{You explore more potential models and can potentially find a
+  better model.}
+\item
+  Your models take less time to fit.
+\item
+  There's no advantage; you'll always end up with the same final model.
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Try a longer tune length}\label{try-a-longer-tune-length}
+
+Recall from the video that random forest models have a primary tuning
+parameter of \texttt{mtry}, which controls how many variables are
+exposed to the splitting search routine at each split. For example,
+suppose that a tree has a total of 10 splits and \texttt{mtry\ =\ 2}.
+This means that there are 10 samples of 2 predictors each time a split
+is evaluated.
+
+Use a larger tuning grid this time, but stick to the defaults provided
+by the \texttt{train()} function. Try a \texttt{tuneLength} of 3, rather
+than 1, to explore some more potential models, and plot the resulting
+model using the \texttt{plot} function.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-18}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\begin{itemize}
+\item
+  Train a random forest model, \texttt{model}, using the \texttt{wine}
+  dataset on the \texttt{quality} variable with all other variables as
+  explanatory variables. (This will take a few seconds to run, so be
+  patient!)
+\item
+  Use \texttt{method\ =\ "ranger"}.
+\item
+  Use a \texttt{tuneLength} of 3.
+\item
+  Use 5 CV folds.
+\item
+  Print \texttt{model} to the console.
+\item
+  Plot the \texttt{model} after fitting it.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Fit random forest: model}
+\NormalTok{model <-}\StringTok{ }\KeywordTok{train}\NormalTok{(}
+\NormalTok{  quality }\OperatorTok{~}\StringTok{ }\NormalTok{.,}
+  \DataTypeTok{tuneLength =} \DecValTok{3}\NormalTok{,}
+  \DataTypeTok{data =}\NormalTok{ wine, }\DataTypeTok{method =} \StringTok{"ranger"}\NormalTok{,}
+  \DataTypeTok{trControl =} \KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }\DataTypeTok{number =} \DecValTok{5}\NormalTok{, }\DataTypeTok{verboseIter =} \OtherTok{FALSE}\NormalTok{)}
+\NormalTok{)}
+\CommentTok{# Print model to console}
+\KeywordTok{print}\NormalTok{(model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Random Forest 
+
+6497 samples
+  12 predictor
+
+No pre-processing
+Resampling: Cross-Validated (5 fold) 
+Summary of sample sizes: 5198, 5197, 5198, 5198, 5197 
+Resampling results across tuning parameters:
+
+  mtry  splitrule   RMSE       Rsquared   MAE      
+   2    variance    0.6028505  0.5364907  0.4415914
+   2    extratrees  0.6191443  0.5227601  0.4665002
+   7    variance    0.6032059  0.5280572  0.4352658
+   7    extratrees  0.6054314  0.5297898  0.4456246
+  12    variance    0.6065267  0.5209531  0.4358597
+  12    extratrees  0.6050458  0.5271183  0.4428500
+
+Tuning parameter 'min.node.size' was held constant at a value of 5
+RMSE was used to select the optimal model using the smallest value.
+The final values used for the model were mtry = 2, splitrule = variance
+ and min.node.size = 5.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Plot model}
+\KeywordTok{plot}\NormalTok{(model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{MachineLearningToolboxSC_files/figure-latex/unnamed-chunk-73-1} \end{center}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Custom tuning grids video}\label{custom-tuning-grids-video}
+\addcontentsline{toc}{subsection}{Custom tuning grids video}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Advantages of a custom tuning
+grid}\label{advantages-of-a-custom-tuning-grid}
+\addcontentsline{toc}{subsection}{Advantages of a custom tuning grid}
+
+Why use a custom \texttt{tuneGrid}?
+
+\begin{itemize}
+\item
+  There's no advantage; you'll always end up with the same final model.
+\item
+  \textbf{It gives you more fine-grained control over the tuning
+  parameters that are explored.}
+\item
+  It always makes your models run faster.
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Fit a random forest with custom
+tuning}\label{fit-a-random-forest-with-custom-tuning}
+
+Now that you've explored the default tuning grids provided by the
+\texttt{train()} function, let's customize your models a bit more.
+
+You can provide any number of values for \texttt{mtry}, from 2 up to the
+number of columns in the dataset. In practice, there are diminishing
+returns for much larger values of \texttt{mtry}, so you will use a
+custom tuning grid that explores 2 simple models (\texttt{mtry\ =\ 2}
+and \texttt{mtry\ =\ 3}) as well as one more complicated model
+(\texttt{mtry\ =\ 7}).
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-19}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\begin{itemize}
+\item
+  Define a custom tuning grid.
+
+  \begin{itemize}
+  \item
+    Set the number of variables to possibly split at each node,
+    \texttt{.mtry}, to a vector of 2, 3, and 7.
+  \item
+    Set the rule to split on, \texttt{.splitrule}, to
+    \texttt{"variance"}.
+  \item
+    Set the minimum node size, \texttt{.min.node.size}, to 5.
+  \end{itemize}
+\item
+  Train another random forest model, \texttt{model}, using the
+  \texttt{wine} dataset on the \texttt{quality} variable with all other
+  variables as explanatory variables.
+
+  \begin{itemize}
+  \item
+    Use \texttt{method\ =\ "ranger"}.
+  \item
+    Use the custom \texttt{tuneGrid}.
+  \item
+    Use 5 CV folds.
+  \end{itemize}
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Define the tuning grid: tuneGrid}
+\NormalTok{tuneGrid <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}
+  \DataTypeTok{.mtry =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{7}\NormalTok{),}
+  \DataTypeTok{.splitrule =} \StringTok{"variance"}\NormalTok{,}
+  \DataTypeTok{.min.node.size =} \DecValTok{5}
+\NormalTok{)}
+
+\CommentTok{# Fit random forest: model}
+\NormalTok{model <-}\StringTok{ }\KeywordTok{train}\NormalTok{(}
+\NormalTok{  quality }\OperatorTok{~}\StringTok{ }\NormalTok{.,}
+  \DataTypeTok{tuneGrid =}\NormalTok{ tuneGrid,}
+  \DataTypeTok{data =}\NormalTok{ wine, }
+  \DataTypeTok{method =} \StringTok{"ranger"}\NormalTok{,}
+  \DataTypeTok{trControl =} \KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }
+                           \DataTypeTok{number =} \DecValTok{5}\NormalTok{, }
+                           \DataTypeTok{verboseIter =} \OtherTok{FALSE}\NormalTok{)}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Print \texttt{model} to the console.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Print model to console}
+\NormalTok{model}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Random Forest 
+
+6497 samples
+  12 predictor
+
+No pre-processing
+Resampling: Cross-Validated (5 fold) 
+Summary of sample sizes: 5197, 5196, 5199, 5198, 5198 
+Resampling results across tuning parameters:
+
+  mtry  RMSE       Rsquared   MAE      
+  2     0.5994031  0.5409142  0.4387527
+  3     0.5987053  0.5384036  0.4354743
+  7     0.6000501  0.5323440  0.4334891
+
+Tuning parameter 'splitrule' was held constant at a value of variance
+
+Tuning parameter 'min.node.size' was held constant at a value of 5
+RMSE was used to select the optimal model using the smallest value.
+The final values used for the model were mtry = 3, splitrule = variance
+ and min.node.size = 5.
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  Plot the \texttt{model} after fitting it using \texttt{plot()}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Plot model}
+\KeywordTok{plot}\NormalTok{(model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{MachineLearningToolboxSC_files/figure-latex/unnamed-chunk-76-1} \end{center}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{\texorpdfstring{Introducing \texttt{glmnet}
+video}{Introducing glmnet video}}\label{introducing-glmnet-video}
+\addcontentsline{toc}{subsection}{Introducing \texttt{glmnet} video}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{\texorpdfstring{Advantage of
+\texttt{glmnet}}{Advantage of glmnet}}\label{advantage-of-glmnet}
+\addcontentsline{toc}{subsection}{Advantage of \texttt{glmnet}}
+
+What's the advantage of \texttt{glmnet} over regular \texttt{glm}
+models?
+
+\begin{itemize}
+\item
+  \texttt{glmnet} models automatically find interaction variables.
+\item
+  \texttt{glmnet} models don't provide p-values or confidence intervals
+  on predictions.
+\item
+  \textbf{\texttt{glmnet} models place constraints on your coefficients,
+  which helps prevent overfitting.}
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{\texorpdfstring{Make a custom
+\texttt{trainControl}}{Make a custom trainControl}}\label{make-a-custom-traincontrol}
+
+The wine quality dataset was a regression problem, but now you are
+looking at a classification problem. This is a simulated dataset based
+on the ``don't overfit'' competition on Kaggle a number of years ago.
+
+Classification problems are a little more complicated than regression
+problems because you have to provide a custom \texttt{summaryFunction}
+to the \texttt{train()} function to use the \texttt{AUC} metric to rank
+your models. Start by making a custom \texttt{trainControl}, as you did
+in the previous chapter. Be sure to set \texttt{classProbs\ =\ TRUE},
+otherwise the \texttt{twoClassSummary} for \texttt{summaryFunction} will
+break.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-20}
+\addcontentsline{toc}{subsection}{Exercise}
+
+Make a custom \texttt{trainControl} called \texttt{myControl} for
+classification using the \texttt{trainControl} function.
+
+\begin{itemize}
+\item
+  Use 10 CV folds.
+\item
+  Use \texttt{twoClassSummary} for the \texttt{summaryFunction}.
+\item
+  Be sure to set \texttt{classProbs\ =\ TRUE}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Create custom trainControl: myControl}
+\NormalTok{myControl <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}
+  \DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }
+  \DataTypeTok{number =} \DecValTok{10}\NormalTok{,}
+  \DataTypeTok{summaryFunction =}\NormalTok{ twoClassSummary,}
+  \DataTypeTok{classProbs =} \OtherTok{TRUE}\NormalTok{, }\CommentTok{# IMPORTANT!}
+  \DataTypeTok{verboseIter =} \OtherTok{FALSE}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{\texorpdfstring{Fit glmnet with custom
+\texttt{trainControl}}{Fit glmnet with custom trainControl}}\label{fit-glmnet-with-custom-traincontrol}
+
+Now that you have a custom \texttt{trainControl} object, fit a
+\texttt{glmnet} model to the ``don't overfit'' dataset. Recall from the
+video that \texttt{glmnet} is an extension of the generalized linear
+regression model (or \texttt{glm}) that places constraints on the
+magnitude of the coefficients to prevent overfitting. This is more
+commonly known as ``penalized'' regression modeling and is a very useful
+technique on datasets with many predictors and few values.
+
+\texttt{glmnet} is capable of fitting two different kinds of penalized
+models, controlled by the alpha parameter:
+
+\begin{itemize}
+\item
+  Ridge regression (or \texttt{alpha\ =\ 0})
+\item
+  Lasso regression (or \texttt{alpha\ =\ 1})
+\end{itemize}
+
+You'll now fit a \texttt{glmnet} model to the ``don't overfit'' dataset
+using the defaults provided by the \texttt{caret} package.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-21}
+\addcontentsline{toc}{subsection}{Exercise}
+
+Train a \texttt{glmnet} model called model on the \texttt{overfit} data.
+Use the custom \texttt{trainControl} from the previous exercise
+(\texttt{myControl}). The variable \texttt{y} is the response variable
+and all other variables are explanatory variables.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{overfit <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"https://assets.datacamp.com/production/course_1048/datasets/overfit.csv"}\NormalTok{)}
+\NormalTok{model <-}\StringTok{ }\KeywordTok{train}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\NormalTok{., }
+               \DataTypeTok{data =}\NormalTok{ overfit, }
+               \DataTypeTok{method =} \StringTok{"glmnet"}\NormalTok{,}
+               \DataTypeTok{trControl =}\NormalTok{ myControl)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Warning in train.default(x, y, weights = w, ...): The metric "Accuracy" was not
+in the result set. ROC will be used instead.
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  Print the \texttt{model} to the console.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Print model}
+\KeywordTok{print}\NormalTok{(model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+glmnet 
+
+250 samples
+200 predictors
+  2 classes: 'class1', 'class2' 
+
+No pre-processing
+Resampling: Cross-Validated (10 fold) 
+Summary of sample sizes: 225, 225, 224, 225, 225, 225, ... 
+Resampling results across tuning parameters:
+
+  alpha  lambda        ROC        Sens  Spec     
+  0.10   0.0001012745  0.4085145  0     0.9483696
+  0.10   0.0010127448  0.4041667  0     0.9610507
+  0.10   0.0101274483  0.4214674  0     0.9956522
+  0.55   0.0001012745  0.4107790  0     0.9438406
+  0.55   0.0010127448  0.4066123  0     0.9440217
+  0.55   0.0101274483  0.4238225  0     0.9871377
+  1.00   0.0001012745  0.3630435  0     0.9398551
+  1.00   0.0010127448  0.3805254  0     0.9398551
+  1.00   0.0101274483  0.4361413  0     0.9827899
+
+ROC was used to select the optimal model using the largest value.
+The final values used for the model were alpha = 1 and lambda = 0.01012745.
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  Use the \texttt{max()} function to find the maximum of the ROC
+  statistic contained somewhere in \texttt{model{[}{[}"results"{]}{]}}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{max}\NormalTok{(model[[}\StringTok{"results"}\NormalTok{]][[}\StringTok{"ROC"}\NormalTok{]])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 0.4361413
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{\texorpdfstring{\texttt{glmnet} with custom tuning grid
+video}{glmnet with custom tuning grid video}}\label{glmnet-with-custom-tuning-grid-video}
+\addcontentsline{toc}{subsection}{\texttt{glmnet} with custom tuning
+grid video}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Why a custom tuning grid?}\label{why-a-custom-tuning-grid}
+\addcontentsline{toc}{subsection}{Why a custom tuning grid?}
+
+Why use a custom tuning grid for a \texttt{glmnet} model?
+
+\begin{itemize}
+\item
+  There's no reason to use a custom grid; the default is always the
+  best.
+\item
+  \textbf{The default tuning grid is very small and there are many more
+  potential \texttt{glmnet} models you want to explore.}
+\item
+  \texttt{glmnet} models are really slow, so you should never try more
+  than a few tuning parameters.
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{\texorpdfstring{\texttt{glmnet} with custom
+\texttt{trainControl} and
+tuning}{glmnet with custom trainControl and tuning}}\label{glmnet-with-custom-traincontrol-and-tuning}
+
+As you saw in the video, the \texttt{glmnet} model actually fits many
+models at once (one of the great things about the package). You can
+exploit this by passing a large number of \texttt{lambda\ values}, which
+control the amount of penalization in the model. \texttt{train()} is
+smart enough to only fit one model per \texttt{alpha} value and pass all
+of the \texttt{lambda} values at once for simultaneous fitting.
+
+My favorite tuning grid for \texttt{glmnet} models is:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{expand.grid}\NormalTok{(}\DataTypeTok{alpha =} \DecValTok{0}\OperatorTok{:}\DecValTok{1}\NormalTok{,}
+            \DataTypeTok{lambda =} \KeywordTok{seq}\NormalTok{(}\FloatTok{0.0001}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DataTypeTok{length =} \DecValTok{100}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+This grid explores a large number of \texttt{lambda} values (100, in
+fact), from a very small one to a very large one. (You could increase
+the maximum \texttt{lambda} to 10, but in this exercise 1 is a good
+upper bound.)
+
+If you want to explore fewer models, you can use a shorter
+\texttt{lambda} sequence. For example,
+\texttt{lambda\ =\ seq(0.0001,\ 1,\ length\ =\ 10)} would fit 10 models
+per value of \texttt{alpha}.
+
+You also look at the two forms of penalized models with this
+\texttt{tuneGrid}: ridge regression and lasso regression.
+\texttt{alpha\ =\ 0} is pure ridge regression, and \texttt{alpha\ =\ 1}
+is pure lasso regression. You can fit a mixture of the two models
+(i.e.~an elastic net) using an alpha between 0 and 1. For example,
+\texttt{alpha\ =\ .05} would be 95\% ridge regression and 5\% lasso
+regression.
+
+In this problem you'll just explore the 2 extremes--pure ridge and pure
+lasso regression--for the purpose of illustrating their differences.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-22}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\begin{itemize}
+\tightlist
+\item
+  Train a \texttt{glmnet} model on the \texttt{overfit} data such that
+  \texttt{y} is the response variable and all other variables are
+  explanatory variables. Make sure to use your custom
+  \texttt{trainControl} from the previous exercise (\texttt{myControl}).
+  Also, use a custom \texttt{tuneGrid} to explore \texttt{alpha\ =\ 0:1}
+  and 20 values of \texttt{lambda} between 0.0001 and 1 per value of
+  \texttt{alpha}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Train glmnet with custom trainControl and tuning: model}
+\NormalTok{model <-}\StringTok{ }\KeywordTok{train}\NormalTok{(}
+\NormalTok{  y }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ overfit,}
+  \DataTypeTok{tuneGrid =} \KeywordTok{expand.grid}\NormalTok{(}\DataTypeTok{alpha  =} \DecValTok{0}\OperatorTok{:}\DecValTok{1}\NormalTok{, }
+                         \DataTypeTok{lambda =} \KeywordTok{seq}\NormalTok{(}\FloatTok{0.0001}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DataTypeTok{length =} \DecValTok{20}\NormalTok{)),}
+  \DataTypeTok{method =} \StringTok{"glmnet"}\NormalTok{,}
+  \DataTypeTok{trControl =}\NormalTok{ myControl}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Warning in train.default(x, y, weights = w, ...): The metric "Accuracy" was not
+in the result set. ROC will be used instead.
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  Print \texttt{model} to the console.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Print model to console}
+\NormalTok{model}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+glmnet 
+
+250 samples
+200 predictors
+  2 classes: 'class1', 'class2' 
+
+No pre-processing
+Resampling: Cross-Validated (10 fold) 
+Summary of sample sizes: 225, 225, 226, 225, 225, 225, ... 
+Resampling results across tuning parameters:
+
+  alpha  lambda      ROC        Sens  Spec     
+  0      0.00010000  0.4061594  0     0.9786232
+  0      0.05272632  0.4379529  0     1.0000000
+  0      0.10535263  0.4462862  0     1.0000000
+  0      0.15797895  0.4613225  0     1.0000000
+  0      0.21060526  0.4805254  0     1.0000000
+  0      0.26323158  0.4910326  0     1.0000000
+  0      0.31585789  0.4931159  0     1.0000000
+  0      0.36848421  0.4972826  0     1.0000000
+  0      0.42111053  0.4972826  0     1.0000000
+  0      0.47373684  0.4929348  0     1.0000000
+  0      0.52636316  0.4951087  0     1.0000000
+  0      0.57898947  0.4971920  0     1.0000000
+  0      0.63161579  0.4971920  0     1.0000000
+  0      0.68424211  0.5015399  0     1.0000000
+  0      0.73686842  0.5057065  0     1.0000000
+  0      0.78949474  0.5057065  0     1.0000000
+  0      0.84212105  0.5035326  0     1.0000000
+  0      0.89474737  0.5035326  0     1.0000000
+  0      0.94737368  0.5057065  0     1.0000000
+  0      1.00000000  0.5057065  0     1.0000000
+  1      0.00010000  0.3278080  0     0.9356884
+  1      0.05272632  0.5268116  0     1.0000000
+  1      0.10535263  0.5000000  0     1.0000000
+  1      0.15797895  0.5000000  0     1.0000000
+  1      0.21060526  0.5000000  0     1.0000000
+  1      0.26323158  0.5000000  0     1.0000000
+  1      0.31585789  0.5000000  0     1.0000000
+  1      0.36848421  0.5000000  0     1.0000000
+  1      0.42111053  0.5000000  0     1.0000000
+  1      0.47373684  0.5000000  0     1.0000000
+  1      0.52636316  0.5000000  0     1.0000000
+  1      0.57898947  0.5000000  0     1.0000000
+  1      0.63161579  0.5000000  0     1.0000000
+  1      0.68424211  0.5000000  0     1.0000000
+  1      0.73686842  0.5000000  0     1.0000000
+  1      0.78949474  0.5000000  0     1.0000000
+  1      0.84212105  0.5000000  0     1.0000000
+  1      0.89474737  0.5000000  0     1.0000000
+  1      0.94737368  0.5000000  0     1.0000000
+  1      1.00000000  0.5000000  0     1.0000000
+
+ROC was used to select the optimal model using the largest value.
+The final values used for the model were alpha = 1 and lambda = 0.05272632.
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  Print the \texttt{max()} of the ROC statistic in
+  \texttt{model{[}{[}"results"{]}{]}}. You can access it using
+  \texttt{model{[}{[}"results"{]}{]}{[}{[}"ROC"{]}{]}}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Print maximum ROC statistic}
+\KeywordTok{max}\NormalTok{(model[[}\StringTok{"results"}\NormalTok{]][[}\StringTok{"ROC"}\NormalTok{]])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 0.5268116
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{\texorpdfstring{Interpreting \texttt{glmnet}
+plots}{Interpreting glmnet plots}}\label{interpreting-glmnet-plots}
+
+Figure \ref{fig:PLR} shows the tuning plot for the custom tuned
+\texttt{glmnet} model you created in the last exercise. For the
+\texttt{overfit} dataset, which value of \texttt{alpha} is better?
+
+\begin{itemize}
+\item
+  \texttt{alpha\ =\ 0\ (ridge)}
+\item
+  \textbf{\texttt{alpha\ =\ 1\ (lasso)}}
+\end{itemize}
+
+\begin{figure}
+
+{\centering \includegraphics{MachineLearningToolboxSC_files/figure-latex/PLR-1} 
+
+}
+
+\caption{`glmnet` plot}\label{fig:PLR}
+\end{figure}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\chapter{Preprocessing your data}\label{preprocessing-your-data}
+
+In this chapter, you will practice using \texttt{train()} to preprocess
+data before fitting models, improving your ability to making accurate
+predictions.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Median imputation video}\label{median-imputation-video}
+\addcontentsline{toc}{subsection}{Median imputation video}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Median imputation vs.~omitting
+rows}\label{median-imputation-vs.omitting-rows}
+\addcontentsline{toc}{subsection}{Median imputation vs.~omitting rows}
+
+What's the value of median imputation?
+
+\begin{itemize}
+\item
+  It removes some variance from your data, making it easier to model.
+\item
+  \textbf{It lets you model data with missing values.}
+\item
+  It's useless; you should just throw out rows of data with any
+  missings.
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Apply median imputation}\label{apply-median-imputation}
+
+In this chapter, you'll be using a version of the Wisconsin Breast
+Cancer dataset. This dataset presents a classic binary classification
+problem: 50\% of the samples are benign, 50\% are malignant, and the
+challenge is to identify which are which.
+
+This dataset is interesting because many of the predictors contain
+missing values and most rows of the dataset have at least one missing
+value. This presents a modeling challenge, because most machine learning
+algorithms cannot handle missing values out of the box. For example,
+your first instinct might be to fit a logistic regression model to this
+data, but prior to doing this you need a strategy for handling the
+\texttt{NA}s.
+
+Fortunately, the \texttt{train()} function in \texttt{caret} contains an
+argument called \texttt{preProcess}, which allows you to specify that
+median imputation should be used to fill in the missing values. In
+previous chapters, you created models with the \texttt{train()} function
+using formulas such as \texttt{y\ \textasciitilde{}\ .}. An alternative
+way is to specify the \texttt{x} and \texttt{y} arguments to
+\texttt{train()}, where \texttt{x} is an object with samples in rows and
+features in columns and \texttt{y} is a numeric or factor vector
+containing the outcomes. Said differently, \texttt{x} is a matrix or
+data frame that contains the whole dataset you'd use for the data
+argument to the \texttt{lm()} call, for example, but excludes the
+response variable column; \texttt{y} is a vector that contains just the
+response variable column.
+
+For this exercise, the argument \texttt{x\ to\ train()} is loaded in
+your workspace as \texttt{breast\_cancer\_x} and \texttt{y} as
+\texttt{breast\_cancer\_y}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{url <-}\StringTok{ "https://assets.datacamp.com/production/course_1048/datasets/BreastCancer.RData"}
+\KeywordTok{download.file}\NormalTok{(url, }\StringTok{"./Data/BreastCancer.RData"}\NormalTok{)}
+\KeywordTok{load}\NormalTok{(}\StringTok{"./Data/BreastCancer.RData"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-23}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\begin{itemize}
+\tightlist
+\item
+  Use the \texttt{train()} function to fit a glm model called
+  \texttt{model} to the breast cancer dataset. Use
+  \texttt{preProcess\ =\ "medianImpute"} to handle the missing values.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(caret)}
+\CommentTok{# Create custom trainControl: myControl}
+\NormalTok{myControl <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}
+  \DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }
+  \DataTypeTok{number =} \DecValTok{10}\NormalTok{,}
+  \DataTypeTok{summaryFunction =}\NormalTok{ twoClassSummary,}
+  \DataTypeTok{classProbs =} \OtherTok{TRUE}\NormalTok{, }\CommentTok{# IMPORTANT!}
+  \DataTypeTok{verboseIter =} \OtherTok{FALSE}
+\NormalTok{)}
+\CommentTok{# Apply median imputation: model}
+\NormalTok{model <-}\StringTok{ }\KeywordTok{train}\NormalTok{(}
+  \DataTypeTok{x =}\NormalTok{ breast_cancer_x, }\DataTypeTok{y =}\NormalTok{ breast_cancer_y,}
+  \DataTypeTok{method =} \StringTok{"glm"}\NormalTok{,}
+  \DataTypeTok{trControl =}\NormalTok{ myControl,}
+  \DataTypeTok{preProcess =} \StringTok{"medianImpute"}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Warning in train.default(x = breast_cancer_x, y = breast_cancer_y, method =
+"glm", : The metric "Accuracy" was not in the result set. ROC will be used
+instead.
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  Print the model to the console.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Print model to console}
+\NormalTok{model}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Generalized Linear Model 
+
+699 samples
+  9 predictor
+  2 classes: 'benign', 'malignant' 
+
+Pre-processing: median imputation (9) 
+Resampling: Cross-Validated (10 fold) 
+Summary of sample sizes: 629, 630, 629, 629, 629, 628, ... 
+Resampling results:
+
+  ROC        Sens       Spec     
+  0.9909642  0.9694686  0.9378333
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Comparing KNN imputation to median
+imputation}\label{comparing-knn-imputation-to-median-imputation}
+\addcontentsline{toc}{subsection}{Comparing KNN imputation to median
+imputation}
+
+Will KNN imputation always be better than median imputation?
+
+\begin{itemize}
+\item
+  \textbf{No, you should try both options and keep the one that gives
+  more accurate models.}
+\item
+  Yes, KNN is a more complicated model than medians, so it's always
+  better.
+\item
+  No, medians are more statistically valid than KNN and should always be
+  used.
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Use KNN imputation}\label{use-knn-imputation}
+
+In the previous exercise, you used median imputation to fill in missing
+values in the breast cancer dataset, but that is not the only possible
+method for dealing with missing data.
+
+An alternative to median imputation is \(k\)-nearest neighbors, or KNN,
+imputation. This is a more advanced form of imputation where missing
+values are replaced with values from other rows that are similar to the
+current row. While this is a lot more complicated to implement in
+practice than simple median imputation, it is very easy to explore in
+\texttt{caret} using the \texttt{preProcess} argument to
+\texttt{train()}. You can simply use \texttt{preProcess\ =\ "knnImpute"}
+to change the method of imputation used prior to model fitting.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-24}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\texttt{breast\_cancer\_x} and \texttt{breast\_cancer\_y} are loaded in
+your workspace.
+
+\begin{itemize}
+\item
+  Use the \texttt{train()} function to fit a glm model called
+  \texttt{model2} to the breast cancer dataset.
+\item
+  Use KNN imputation to handle missing values.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Apply KNN imputation: model2}
+\NormalTok{model2 <-}\StringTok{ }\KeywordTok{train}\NormalTok{(}
+  \DataTypeTok{x =}\NormalTok{ breast_cancer_x, }\DataTypeTok{y =}\NormalTok{ breast_cancer_y,}
+  \DataTypeTok{method =} \StringTok{"glm"}\NormalTok{,}
+  \DataTypeTok{trControl =}\NormalTok{ myControl,}
+  \DataTypeTok{preProcess =} \StringTok{"knnImpute"}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Warning in train.default(x = breast_cancer_x, y = breast_cancer_y, method =
+"glm", : The metric "Accuracy" was not in the result set. ROC will be used
+instead.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Print model to console}
+\NormalTok{model2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Generalized Linear Model 
+
+699 samples
+  9 predictor
+  2 classes: 'benign', 'malignant' 
+
+Pre-processing: nearest neighbor imputation (9), centered (9), scaled (9) 
+Resampling: Cross-Validated (10 fold) 
+Summary of sample sizes: 630, 629, 629, 629, 629, 629, ... 
+Resampling results:
+
+  ROC        Sens       Spec 
+  0.9901472  0.9715942  0.942
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Compare KNN and median
+imputation}\label{compare-knn-and-median-imputation}
+\addcontentsline{toc}{subsection}{Compare KNN and median imputation}
+
+All of the preprocessing steps in the \texttt{train()} function happen
+in the training set of each cross-validation fold, so the error metrics
+reported include the effects of the preprocessing.
+
+This includes the imputation method used (e.g. \texttt{knnImpute} or
+\texttt{medianImpute}). This is useful because it allows you to compare
+different methods of imputation and choose the one that performs the
+best out-of-sample.
+
+\texttt{median\_model} and \texttt{knn\_model} are available in your
+workspace, as is \texttt{ANS}, which contains the resampled results of
+both models. Look at the results of the models by calling
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{dotplot}\NormalTok{(ANS, }\DataTypeTok{metric =} \StringTok{"ROC"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+and choose the one that performs the best out-of-sample. Which method of
+imputation yields the highest out-of-sample ROC score for your glm
+model?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{9}\NormalTok{)}
+\NormalTok{median_model <-}\StringTok{ }\NormalTok{model}
+\NormalTok{knn_model <-}\StringTok{ }\NormalTok{model2}
+\NormalTok{ANS <-}\StringTok{ }\KeywordTok{resamples}\NormalTok{(}\KeywordTok{list}\NormalTok{(}\DataTypeTok{median_model =}\NormalTok{ median_model, }\DataTypeTok{knn_model =}\NormalTok{ knn_model))}
+\KeywordTok{summary}\NormalTok{(ANS)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+Call:
+summary.resamples(object = ANS)
+
+Models: median_model, knn_model 
+Number of resamples: 10 
+
+ROC 
+                  Min.   1st Qu.    Median      Mean   3rd Qu. Max. NA's
+median_model 0.9556159 0.9896739 0.9931461 0.9909642 0.9990892    1    0
+knn_model    0.9692029 0.9859620 0.9949678 0.9901472 0.9977355    1    0
+
+Sens 
+                  Min.   1st Qu.    Median      Mean   3rd Qu. Max. NA's
+median_model 0.9130435 0.9557971 0.9673913 0.9694686 1.0000000    1    0
+knn_model    0.9130435 0.9778986 0.9782609 0.9715942 0.9782609    1    0
+
+Spec 
+                  Min.   1st Qu.    Median      Mean   3rd Qu. Max. NA's
+median_model 0.8750000 0.9166667 0.9183333 0.9378333 0.9895833    1    0
+knn_model    0.9166667 0.9166667 0.9183333 0.9420000 0.9583333    1    0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{dotplot}\NormalTok{(ANS, }\DataTypeTok{metric =} \StringTok{"ROC"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{MachineLearningToolboxSC_files/figure-latex/unnamed-chunk-94-1} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{densityplot}\NormalTok{(ANS, }\DataTypeTok{metric =} \StringTok{"ROC"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{MachineLearningToolboxSC_files/figure-latex/unnamed-chunk-95-1} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{xyplot}\NormalTok{(ANS, }\DataTypeTok{metric =} \StringTok{"ROC"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{MachineLearningToolboxSC_files/figure-latex/unnamed-chunk-96-1} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{bwplot}\NormalTok{(ANS, }\DataTypeTok{metric =} \StringTok{"ROC"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{MachineLearningToolboxSC_files/figure-latex/unnamed-chunk-97-1} \end{center}
+
+\begin{itemize}
+\item
+  KNN imputation is much better than median imputation.
+\item
+  KNN imputation is slightly better than median imputation.
+\item
+  Median imputation is much better than KNN imputation.
+\item
+  \textbf{Median imputation is slightly better than KNN imputation.}
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section*{Multiple preprocessing
+methods}\label{multiple-preprocessing-methods}
+\addcontentsline{toc}{section}{Multiple preprocessing methods}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section*{Order of operations}\label{order-of-operations}
+\addcontentsline{toc}{section}{Order of operations}
+
+Which comes first in caret's \texttt{preProcess()} function: median
+imputation or centering and scaling of variables?
+
+\begin{itemize}
+\item
+  \textbf{Median imputation comes before centering and scaling.}
+\item
+  Centering and scaling come before median imputation.
+\end{itemize}
+
+Note: Centering and scaling require data with no missing values.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Combining preprocessing
+methods}\label{combining-preprocessing-methods}
+
+The \texttt{preProcess} argument to \texttt{train()} doesn't just limit
+you to imputing missing values. It also includes a wide variety of other
+\texttt{preProcess} techniques to make your life as a data scientist
+much easier. You can read a full list of them by typing
+\texttt{?preProcess} and reading the help page for this function.
+
+One set of preprocessing functions that is particularly useful for
+fitting regression models is standardization: centering and scaling. You
+first center by subtracting the mean of each column from each value in
+that column, then you scale by dividing by the standard deviation.
+
+Standardization transforms your data such that for each column, the mean
+is 0 and the standard deviation is 1. This makes it easier for
+regression models to find a good solution.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-25}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\texttt{breast\_cancer\_x} and \texttt{breast\_cancer\_y} are loaded in
+your workspace. Fit two models called \texttt{model1} and
+\texttt{model2} to the breast cancer data, then print each to the
+console:
+
+\begin{itemize}
+\tightlist
+\item
+  A logistic regression model using only median imputation:
+  \texttt{model1}
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Fit glm with median imputation: model1}
+\NormalTok{model1 <-}\StringTok{ }\KeywordTok{train}\NormalTok{(}
+  \DataTypeTok{x =}\NormalTok{ breast_cancer_x, }\DataTypeTok{y =}\NormalTok{ breast_cancer_y,}
+  \DataTypeTok{method =} \StringTok{"glm"}\NormalTok{,}
+  \DataTypeTok{trControl =}\NormalTok{ myControl,}
+  \DataTypeTok{preProcess =} \StringTok{"medianImpute"}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Warning in train.default(x = breast_cancer_x, y = breast_cancer_y, method =
+"glm", : The metric "Accuracy" was not in the result set. ROC will be used
+instead.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Print model1}
+\NormalTok{model1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Generalized Linear Model 
+
+699 samples
+  9 predictor
+  2 classes: 'benign', 'malignant' 
+
+Pre-processing: median imputation (9) 
+Resampling: Cross-Validated (10 fold) 
+Summary of sample sizes: 630, 629, 628, 629, 629, 629, ... 
+Resampling results:
+
+  ROC        Sens       Spec     
+  0.9921602  0.9694203  0.9418333
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  A logistic regression model using median imputation, centering, and
+  scaling (in that order): \texttt{model2}
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Fit glm with median imputation and standardization: model2}
+\NormalTok{model2 <-}\StringTok{ }\KeywordTok{train}\NormalTok{(}
+  \DataTypeTok{x =}\NormalTok{ breast_cancer_x, }\DataTypeTok{y =}\NormalTok{ breast_cancer_y,}
+  \DataTypeTok{method =} \StringTok{"glm"}\NormalTok{,}
+  \DataTypeTok{trControl =}\NormalTok{ myControl,}
+  \DataTypeTok{preProcess =} \KeywordTok{c}\NormalTok{(}\StringTok{"medianImpute"}\NormalTok{, }\StringTok{"center"}\NormalTok{, }\StringTok{"scale"}\NormalTok{)}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Warning in train.default(x = breast_cancer_x, y = breast_cancer_y, method =
+"glm", : The metric "Accuracy" was not in the result set. ROC will be used
+instead.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Print model2}
+\NormalTok{model2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Generalized Linear Model 
+
+699 samples
+  9 predictor
+  2 classes: 'benign', 'malignant' 
+
+Pre-processing: median imputation (9), centered (9), scaled (9) 
+Resampling: Cross-Validated (10 fold) 
+Summary of sample sizes: 629, 629, 629, 629, 628, 630, ... 
+Resampling results:
+
+  ROC        Sens       Spec     
+  0.9913116  0.9650242  0.9461667
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section*{Handling low information predictors
+video}\label{handling-low-information-predictors-video}
+\addcontentsline{toc}{section}{Handling low information predictors
+video}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section*{Why remove near zero variance
+predictors?}\label{why-remove-near-zero-variance-predictors}
+\addcontentsline{toc}{section}{Why remove near zero variance
+predictors?}
+
+What's the best reason to remove near zero variance predictors from your
+data before building a model?
+
+\begin{itemize}
+\item
+  Because they are guaranteed to have no effect on your model.
+\item
+  Because their p-values in a linear regression will always be low.
+\item
+  \textbf{To reduce model-fitting time without reducing model accuracy.}
+\end{itemize}
+
+Note: Low variance variables are unlikely to have a large impact on our
+models.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Remove near zero variance
+predictors}\label{remove-near-zero-variance-predictors}
+
+As you saw in the video, for the next set of exercises, you'll be using
+the blood-brain dataset. This is a biochemical dataset in which the task
+is to predict the following value for a set of biochemical compounds:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{log}\NormalTok{((concentration of compound }\ControlFlowTok{in}\NormalTok{ brain) }\OperatorTok{/}
+\StringTok{      }\NormalTok{(concentration of compound }\ControlFlowTok{in}\NormalTok{ blood))}
+\end{Highlighting}
+\end{Shaded}
+
+This gives a quantitative metric of the compound's ability to cross the
+blood-brain barrier, and is useful for understanding the biological
+properties of that barrier.
+
+One interesting aspect of this dataset is that it contains many
+variables and many of these variables have extremely low variances. This
+means that there is very little information in these variables because
+they mostly consist of a single value (e.g.~zero).
+
+Fortunately, \texttt{caret} contains a utility function called
+\texttt{nearZeroVar()} for removing such variables to save time during
+modeling.
+
+\texttt{nearZeroVar()} takes in data \texttt{x}, then looks at the ratio
+of the most common value to the second most common value,
+\texttt{freqCut}, and the percentage of distinct values out of the
+number of total samples, \texttt{uniqueCut}. By default, caret uses
+\texttt{freqCut\ =\ 19} and \texttt{uniqueCut\ =\ 10}, which is fairly
+conservative. I like to be a little more aggressive and use
+\texttt{freqCut\ =\ 2} and \texttt{uniqueCut\ =\ 20} when calling
+\texttt{nearZeroVar()}.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-26}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\texttt{bloodbrain\_x} and \texttt{bloodbrain\_y} are loaded in your
+workspace.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{url <-}\StringTok{ "https://assets.datacamp.com/production/course_1048/datasets/BloodBrain.RData"}
+\KeywordTok{download.file}\NormalTok{(url, }\StringTok{"./Data/BloodBrain.RData"}\NormalTok{)}
+\KeywordTok{load}\NormalTok{(}\StringTok{"./Data/BloodBrain.RData"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Identify the near zero variance predictors by running
+  \texttt{nearZeroVar()} on the blood-brain dataset. Store the result as
+  an object called \texttt{remove\_cols}. Use \texttt{freqCut\ =\ 2} and
+  \texttt{uniqueCut\ =\ 20} in the call to \texttt{nearZeroVar()}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Identify near zero variance predictors: remove}
+\NormalTok{remove_cols <-}\StringTok{ }\KeywordTok{nearZeroVar}\NormalTok{(bloodbrain_x, }\DataTypeTok{names =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{freqCut =} \DecValTok{2}\NormalTok{, }\DataTypeTok{uniqueCut =} \DecValTok{20}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Use \texttt{names()} to create a vector containing all column names of
+  \texttt{bloodbrain\_x}. Call this \texttt{all\_cols}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{all_cols <-}\StringTok{ }\KeywordTok{names}\NormalTok{(bloodbrain_x)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Make a new data frame called \texttt{bloodbrain\_x\_small} with the
+  near-zero variance variables removed. Use \texttt{setdiff()} to
+  isolate the column names that you wish to keep (i.e.~that you don't
+  want to remove.)
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Remove from data: bloodbrain_x_small}
+\NormalTok{bloodbrain_x_small <-}\StringTok{ }\NormalTok{bloodbrain_x[ , }\KeywordTok{setdiff}\NormalTok{(all_cols, remove_cols)]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection{\texorpdfstring{\texttt{preProcess()} and
+\texttt{nearZeroVar()}}{preProcess() and nearZeroVar()}}\label{preprocess-and-nearzerovar}
+
+Can you use the \texttt{preProcess} argument in \texttt{caret} to remove
+near-zero variance predictors? Or do you have to do this by hand, prior
+to modeling, using the \texttt{nearZeroVar()} function?
+
+\begin{itemize}
+\item
+  \textbf{Yes! Set the \texttt{preProcess} argument equal to
+  \texttt{"nzv".}}
+\item
+  No, unfortunately. You have to do this by hand.
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Fit model on reduced blood-brain
+data}\label{fit-model-on-reduced-blood-brain-data}
+
+Now that you've reduced your dataset, you can fit a glm model to it
+using the \texttt{train()} function. This model will run faster than
+using the full dataset and will yield very similar predictive accuracy.
+
+Furthermore, zero variance variables can cause problems with
+cross-validation (e.g.~if one fold ends up with only a single unique
+value for that variable), so removing them prior to modeling means you
+are less likely to get errors during the fitting process.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-27}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\texttt{bloodbrain\_x}, \texttt{bloodbrain\_y}, \texttt{remove\_cols},
+and \texttt{bloodbrain\_x\_small} are loaded in your workspace.
+
+\begin{itemize}
+\tightlist
+\item
+  Fit a glm model using the \texttt{train()} function and the reduced
+  blood-brain dataset you created in the previous exercise.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Fit model on reduced data: model}
+\NormalTok{model <-}\StringTok{ }\KeywordTok{train}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ bloodbrain_x_small, }\DataTypeTok{y =}\NormalTok{ bloodbrain_y, }\DataTypeTok{method =} \StringTok{"glm"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Print the result to the console.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Print model to console}
+\NormalTok{model}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Generalized Linear Model 
+
+208 samples
+112 predictors
+
+No pre-processing
+Resampling: Bootstrapped (25 reps) 
+Summary of sample sizes: 208, 208, 208, 208, 208, 208, ... 
+Resampling results:
+
+  RMSE      Rsquared   MAE     
+  1.798777  0.1069717  1.155315
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{\texorpdfstring{Using PCA as an alternative to
+\texttt{nearZeroVar()}}{Using PCA as an alternative to nearZeroVar()}}\label{using-pca-as-an-alternative-to-nearzerovar}
+
+An alternative to removing low-variance predictors is to run PCA on your
+dataset. This is sometimes preferable because it does not throw out all
+of your data: many different low variance predictors may end up combined
+into one high variance PCA variable, which might have a positive impact
+on your model's accuracy.
+
+This is an especially good trick for linear models: the \texttt{pca}
+option in the \texttt{preProcess} argument will center and scale your
+data, combine low variance variables, and ensure that all of your
+predictors are orthogonal. This creates an ideal dataset for linear
+regression modeling, and can often improve the accuracy of your models.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-28}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\texttt{bloodbrain\_x} and \texttt{bloodbrain\_y} are loaded in your
+workspace.
+
+\begin{itemize}
+\tightlist
+\item
+  Fit a \texttt{glm} model to the full blood-brain dataset using the
+  \texttt{"pca"} option to \texttt{preProcess}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Fit glm model using PCA: model}
+\NormalTok{model <-}\StringTok{ }\KeywordTok{train}\NormalTok{(}
+  \DataTypeTok{x =}\NormalTok{ bloodbrain_x, }\DataTypeTok{y =}\NormalTok{ bloodbrain_y,}
+  \DataTypeTok{method =} \StringTok{"glm"}\NormalTok{, }\DataTypeTok{preProcess =} \StringTok{"pca"}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Print the model to the console and inspect the result.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Print model to console}
+\NormalTok{model}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Generalized Linear Model 
+
+208 samples
+132 predictors
+
+Pre-processing: principal component signal extraction (132), centered
+ (132), scaled (132) 
+Resampling: Bootstrapped (25 reps) 
+Summary of sample sizes: 208, 208, 208, 208, 208, 208, ... 
+Resampling results:
+
+  RMSE       Rsquared   MAE      
+  0.6200783  0.4215242  0.4663907
+\end{verbatim}
+
+Note that the PCA model's accuracy is slightly higher than the
+\texttt{nearZeroVar()} model from the previous exercise. PCA is
+generally a better method for handling low-information predictors than
+throwing them out entirely.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\chapter{Selecting models: a case study in churn
+prediction}\label{selecting-models-a-case-study-in-churn-prediction}
+
+In the final chapter of this course, you'll learn how to use
+\texttt{resamples()} to compare multiple models and select (or ensemble)
+the best one(s).
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{\texorpdfstring{Reusing a \texttt{trainControl}
+video}{Reusing a trainControl video}}\label{reusing-a-traincontrol-video}
+\addcontentsline{toc}{subsection}{Reusing a \texttt{trainControl} video}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{\texorpdfstring{Why reuse a
+\texttt{trainControl}?}{Why reuse a trainControl?}}\label{why-reuse-a-traincontrol}
+\addcontentsline{toc}{subsection}{Why reuse a \texttt{trainControl}?}
+
+Why reuse a \texttt{trainControl}?
+
+\begin{itemize}
+\item
+  So you can use the same \texttt{summaryFunction} and tuning parameters
+  for multiple models.
+\item
+  So you don't have to repeat code when fitting multiple models.
+\item
+  So you can compare models on the exact same training and test data.
+\item
+  \textbf{All of the above.}
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Make custom train/test
+indices}\label{make-custom-traintest-indices}
+
+As you saw in the video, for this chapter you will focus on a real-world
+dataset that brings together all of the concepts discussed in the
+previous chapters.
+
+The churn dataset contains data on a variety of telecom customers and
+the modeling challenge is to predict which customers will cancel their
+service (or churn).
+
+In this chapter, you will be exploring two different types of predictive
+models: \texttt{glmnet} and \texttt{rf}, so the first order of business
+is to create a reusable \texttt{trainControl} object you can use to
+reliably compare them.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-29}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\texttt{churn\_x} and \texttt{churn\_y} are loaded in your workspace.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# library(C50)}
+\CommentTok{# data(churn)}
+\NormalTok{url <-}\StringTok{ "https://assets.datacamp.com/production/course_1048/datasets/Churn.RData"}
+\KeywordTok{download.file}\NormalTok{(url, }\StringTok{"./Data/Churn.RData"}\NormalTok{)}
+\KeywordTok{load}\NormalTok{(}\StringTok{"./Data/Churn.RData"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Use \texttt{createFolds()} to create 5 CV folds on \texttt{churn\_y},
+  your target variable for this exercise.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(caret)}
+\CommentTok{# Create custom indices: myFolds}
+\NormalTok{myFolds <-}\StringTok{ }\KeywordTok{createFolds}\NormalTok{(churn_y, }\DataTypeTok{k =} \DecValTok{5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Pass them to \texttt{trainControl()} to create a reusable
+  \texttt{trainControl} for comparing models.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Create reusable trainControl object: myControl}
+\NormalTok{myControl <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}
+  \DataTypeTok{summaryFunction =}\NormalTok{ twoClassSummary,}
+  \DataTypeTok{classProbs =} \OtherTok{TRUE}\NormalTok{, }\CommentTok{# IMPORTANT!}
+  \DataTypeTok{verboseIter =} \OtherTok{FALSE}\NormalTok{,}
+  \DataTypeTok{savePredictions =} \OtherTok{TRUE}\NormalTok{,}
+  \DataTypeTok{index =}\NormalTok{ myFolds}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{\texorpdfstring{Reintroducing \texttt{glmnet}
+video}{Reintroducing glmnet video}}\label{reintroducing-glmnet-video}
+\addcontentsline{toc}{subsection}{Reintroducing \texttt{glmnet} video}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{\texorpdfstring{\texttt{glmnet} as a baseline
+model}{glmnet as a baseline model}}\label{glmnet-as-a-baseline-model}
+\addcontentsline{toc}{subsection}{\texttt{glmnet} as a baseline model}
+
+What makes \texttt{glmnet} a good baseline model?
+
+\begin{itemize}
+\item
+  \textbf{It's simple, fast, and easy to interpret.}
+\item
+  It always gives poor predictions, so your other models will look good
+  by comparison.
+\item
+  Linear models with penalties on their coefficients always give better
+  results.
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Fit the baseline model}\label{fit-the-baseline-model}
+
+Now that you have a reusable \texttt{trainControl} object called
+\texttt{myControl}, you can start fitting different predictive models to
+your \texttt{churn} dataset and evaluate their predictive accuracy.
+
+You'll start with one of my favorite models, \texttt{glmnet}, which
+penalizes linear and logistic regression models on the size and number
+of coefficients to help prevent overfitting.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-30}
+\addcontentsline{toc}{subsection}{Exercise}
+
+Fit a \texttt{glmnet} model to the churn dataset called
+\texttt{model\_glmnet}. Make sure to use \texttt{myControl}, which you
+created in the first exercise and is available in your workspace, as the
+\texttt{trainControl} object.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Fit glmnet model: model_glmnet}
+\NormalTok{model_glmnet <-}\StringTok{ }\KeywordTok{train}\NormalTok{(}
+  \DataTypeTok{x =}\NormalTok{ churn_x, }\DataTypeTok{y =}\NormalTok{ churn_y,}
+  \DataTypeTok{metric =} \StringTok{"ROC"}\NormalTok{,}
+  \DataTypeTok{method =} \StringTok{"glmnet"}\NormalTok{,}
+  \DataTypeTok{trControl =}\NormalTok{ myControl}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Random forest drawback}\label{random-forest-drawback}
+\addcontentsline{toc}{subsection}{Random forest drawback}
+
+What's the drawback of using a random forest model for churn prediction?
+
+\begin{itemize}
+\item
+  Tree-based models are usually less accurate than linear models.
+\item
+  \textbf{You no longer have model coefficients to help interpret the
+  model.}
+\item
+  Nobody else uses random forests to predict churn.
+\end{itemize}
+
+Note: Random forests are a little bit harder to interpret than linear
+models, though it is still possible to understand them.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{\texorpdfstring{Random forest with custom
+\texttt{trainControl}}{Random forest with custom trainControl}}\label{random-forest-with-custom-traincontrol}
+
+Another one of my favorite models is the random forest, which combines
+an ensemble of non-linear decision trees into a highly flexible (and
+usually quite accurate) model.
+
+Rather than using the classic \texttt{randomForest} package, you'll be
+using the \texttt{ranger} package, which is a re-implementation of
+\texttt{randomForest} that produces almost the exact same results, but
+is faster, more stable, and uses less memory. I highly recommend it as a
+starting point for random forest modeling in \texttt{R}.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-31}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\texttt{churn\_x} and \texttt{churn\_y} are loaded in your workspace.
+
+Fit a random forest model to the \texttt{churn} dataset. Be sure to use
+\texttt{myControl} as the \texttt{trainControl} like you've done before
+and implement the \texttt{"ranger"} method.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Fit random forest: model_rf}
+\NormalTok{model_rf <-}\StringTok{ }\KeywordTok{train}\NormalTok{(}
+  \DataTypeTok{x =}\NormalTok{ churn_x, }\DataTypeTok{y =}\NormalTok{ churn_y,}
+  \DataTypeTok{metric =} \StringTok{"ROC"}\NormalTok{,}
+  \DataTypeTok{method =} \StringTok{"ranger"}\NormalTok{,}
+  \DataTypeTok{trControl =}\NormalTok{ myControl}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Matching train/test
+indices}\label{matching-traintest-indices}
+\addcontentsline{toc}{subsection}{Matching train/test indices}
+
+What's the primary reason that train/test indices need to match when
+comparing two models?
+
+\begin{itemize}
+\item
+  You can save a lot of time when fitting your models because you don't
+  have to remake the datasets.
+\item
+  There's no real reason; it just makes your plots look better.
+\item
+  \textbf{Because otherwise you wouldn't be doing a fair comparison of
+  your models and your results could be due to chance.}
+\end{itemize}
+
+Note: Train/test indexes allow you to evaluate your models out of sample
+so you know that they work!
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Create a resamples object}\label{create-a-resamples-object}
+
+Now that you have fit two models to the churn dataset, it's time to
+compare their out-of-sample predictions and choose which one is the best
+model for your dataset.
+
+You can compare models in caret using the \texttt{resamples()} function,
+provided they have the same training data and use the same
+\texttt{trainControl} object with preset cross-validation folds.
+\texttt{resamples()} takes as input a list of models and can be used to
+compare dozens of models at once (though in this case you are only
+comparing two models).
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-32}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\texttt{model\_glmnet} and \texttt{model\_rf} are loaded in your
+workspace.
+
+\begin{itemize}
+\tightlist
+\item
+  Create a \texttt{list()} containing the glmnet model as item1 and the
+  ranger model as item2.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Create model_list}
+\NormalTok{model_list <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}\DataTypeTok{glmnet =}\NormalTok{ model_glmnet, }\DataTypeTok{rf =}\NormalTok{ model_rf)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Pass this list to the \texttt{resamples()} function and save the
+  resulting object as \texttt{ANS}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Pass model_list to resamples(): ANS}
+\NormalTok{ANS <-}\StringTok{ }\KeywordTok{resamples}\NormalTok{(model_list)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Summarize the results by calling \texttt{summary()} on \texttt{ANS}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Summarize the results}
+\KeywordTok{summary}\NormalTok{(ANS)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+Call:
+summary.resamples(object = ANS)
+
+Models: glmnet, rf 
+Number of resamples: 5 
+
+ROC 
+            Min.   1st Qu.    Median      Mean   3rd Qu.      Max. NA's
+glmnet 0.5052747 0.5330286 0.5499558 0.5930020 0.6719540 0.7047966    0
+rf     0.6350549 0.6588571 0.6920866 0.6980432 0.7508842 0.7533333    0
+
+Sens 
+            Min.   1st Qu.    Median      Mean   3rd Qu.      Max. NA's
+glmnet 0.9085714 0.9482759 0.9482759 0.9495632 0.9712644 0.9714286    0
+rf     0.9942529 1.0000000 1.0000000 0.9988506 1.0000000 1.0000000    0
+
+Spec 
+       Min.    1st Qu. Median       Mean   3rd Qu.      Max. NA's
+glmnet    0 0.03846154   0.12 0.10861538 0.1538462 0.2307692    0
+rf        0 0.00000000   0.00 0.03107692 0.0400000 0.1153846    0
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Create a box-and-whisker
+plot}\label{create-a-box-and-whisker-plot}
+
+\texttt{caret} provides a variety of methods to use for comparing
+models. All of these methods are based on the \texttt{resamples()}
+function. My favorite is the box-and-whisker plot, which allows you to
+compare the distribution of predictive accuracy (in this case AUC) for
+the two models.
+
+In general, you want the model with the higher median AUC, as well as a
+smaller range between min and max AUC.
+
+You can make this plot using the \texttt{bwplot()} function, which makes
+a box and whisker plot of the model's out of sample scores. Box and
+whisker plots show the median of each distribution as a line and the
+interquartile range of each distribution as a box around the median
+line. You can pass the \texttt{metric\ =\ "ROC"} argument to the
+\texttt{bwplot()} function to show a plot of the model's out-of-sample
+ROC scores and choose the model with the highest median ROC.
+
+If you do not specify a metric to plot, \texttt{bwplot()} will
+automatically plot 3 of them.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-33}
+\addcontentsline{toc}{subsection}{Exercise}
+
+Pass the \texttt{ANS} object to the \texttt{bwplot()} function to make a
+box-and-whisker plot. Look at the resulting plot and note which model
+has the higher median ROC statistic. Be sure to specify which metric you
+want to plot.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Create bwplot}
+\KeywordTok{bwplot}\NormalTok{(ANS, }\DataTypeTok{metric =} \StringTok{"ROC"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{MachineLearningToolboxSC_files/figure-latex/unnamed-chunk-119-1} \end{center}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Create a scatterplot}\label{create-a-scatterplot}
+
+Another useful plot for comparing models is the scatterplot, also known
+as the xy-plot. This plot shows you how similar the two models'
+performances are on different folds.
+
+It's particularly useful for identifying if one model is consistently
+better than the other across all folds, or if there are situations when
+the inferior model produces better predictions on a particular subset of
+the data.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection{Exercise}\label{exercise-34}
+
+Pass the \texttt{ANS} object to the \texttt{xyplot()} function. Look at
+the resulting plot and note how similar the two models' predictions are
+(or are not) on the different folds. Be sure to specify which metric you
+want to plot.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Create xyplot}
+\KeywordTok{xyplot}\NormalTok{(ANS, }\DataTypeTok{metric =} \StringTok{"ROC"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{MachineLearningToolboxSC_files/figure-latex/unnamed-chunk-120-1} \end{center}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Ensembling models}\label{ensembling-models}
+
+That concludes the course! As a teaser for a future course on making
+ensembles of \texttt{caret} models, I'll show you how to fit a stacked
+ensemble of models using the \texttt{caretEnsemble} package.
+
+\texttt{caretEnsemble} provides the \texttt{caretList()} function for
+creating multiple caret models at once on the same dataset, using the
+same resampling folds. You can also create your own lists of caret
+models.
+
+In this exercise, I've made a \texttt{caretList} for you, containing the
+\texttt{glmnet} and \texttt{ranger} models you fit on the churn dataset.
+Use the \texttt{caretStack()} function to make a stack of caret models,
+with the two sub-models (\texttt{glmnet} and \texttt{ranger}) feeding
+into another (hopefully more accurate!) \texttt{caret} model.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection*{Exercise}\label{exercise-35}
+\addcontentsline{toc}{subsection}{Exercise}
+
+\begin{itemize}
+\tightlist
+\item
+  Call the \texttt{caretStack()} function with two arguments,
+  \texttt{model\_list} and \texttt{method\ =\ "glm"}, to ensemble the
+  two models using a logistic regression. Store the result as
+  \texttt{stack}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(caretEnsemble)}
+\NormalTok{models <-}\StringTok{ }\KeywordTok{caretList}\NormalTok{(}
+  \DataTypeTok{x =}\NormalTok{ churn_x, }\DataTypeTok{y =}\NormalTok{ churn_y,}
+  \DataTypeTok{metric =} \StringTok{"ROC"}\NormalTok{,}
+  \DataTypeTok{trControl =}\NormalTok{ myControl,}
+  \DataTypeTok{methodList =} \KeywordTok{c}\NormalTok{(}\StringTok{"glmnet"}\NormalTok{, }\StringTok{"ranger"}\NormalTok{)}
+\NormalTok{)}
+\CommentTok{# Create ensemble model: stack}
+\NormalTok{stack <-}\StringTok{ }\KeywordTok{caretStack}\NormalTok{(}\DataTypeTok{all.models =}\NormalTok{ models, }\DataTypeTok{method =} \StringTok{"glm"}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Summarize the resulting model with the \texttt{summary()} function.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(stack)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+Call:
+NULL
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-1.5351  -0.4990  -0.4249  -0.3974   2.3679  
+
+Coefficients:
+            Estimate Std. Error z value Pr(>|z|)    
+(Intercept)  -2.5152     0.1410 -17.841  < 2e-16 ***
+glmnet       -2.1633     0.7271  -2.975  0.00293 ** 
+ranger        7.2140     1.1642   6.196 5.78e-10 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 765.13  on 999  degrees of freedom
+Residual deviance: 717.59  on 997  degrees of freedom
+AIC: 723.59
+
+Number of Fisher Scoring iterations: 5
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\bibliography{book.bib,packages.bib}
+
+
+\end{document}

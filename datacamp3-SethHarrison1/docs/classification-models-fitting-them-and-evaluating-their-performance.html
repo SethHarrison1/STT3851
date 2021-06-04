@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 3 Classification models: fitting them and evaluating their performance | Machine Learning Toolbox</title>
+  <meta name="description" content="The output format used for these personal notes is bookdown::gitbook." />
+  <meta name="generator" content="bookdown 0.15 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 3 Classification models: fitting them and evaluating their performance | Machine Learning Toolbox" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="The output format used for these personal notes is bookdown::gitbook." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 3 Classification models: fitting them and evaluating their performance | Machine Learning Toolbox" />
+  
+  <meta name="twitter:description" content="The output format used for these personal notes is bookdown::gitbook." />
+  
+
+<meta name="author" content="Seth Harrison" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="regression-models-fitting-them-and-evaluating-their-performance.html"/>
+<link rel="next" href="tuning-model-parameters-to-improve-performance.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Change this to your Title</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a></li>
+<li class="chapter" data-level="2" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html"><i class="fa fa-check"></i><b>2</b> Regression models: fitting them and evaluating their performance</a><ul>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#welcome-to-the-toolbox-video"><i class="fa fa-check"></i>Welcome to the Toolbox Video</a></li>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#in-sample-rmse-for-linear-regression"><i class="fa fa-check"></i>In-sample RMSE for linear regression</a></li>
+<li class="chapter" data-level="2.1" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#in-sample-rmse-for-linear-regression-on-diamonds"><i class="fa fa-check"></i><b>2.1</b> In-sample RMSE for linear regression on <code>diamonds</code></a><ul>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#exercise"><i class="fa fa-check"></i>Exercise</a></li>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#out-of-sample-error-measures-video"><i class="fa fa-check"></i>Out-of-sample error measures video</a></li>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#out-of-sample-rmse-for-linear-regression"><i class="fa fa-check"></i>Out-of-sample RMSE for linear regression</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#randomly-order-the-data-frame"><i class="fa fa-check"></i><b>2.2</b> Randomly order the data frame</a><ul>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#exercise-1"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#try-an-8020-split"><i class="fa fa-check"></i><b>2.3</b> Try an 80/20 split</a><ul>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#exercise-2"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#predict-on-test-set"><i class="fa fa-check"></i><b>2.4</b> Predict on test set</a><ul>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#exercise-3"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#calculate-test-set-rmse"><i class="fa fa-check"></i><b>2.5</b> Calculate test set RMSE</a><ul>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#exercise-4"><i class="fa fa-check"></i>Exercise</a></li>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#comparing-out-of-sample-rmse-to-in-sample-rmse"><i class="fa fa-check"></i>Comparing out-of-sample RMSE to in-sample RMSE</a></li>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#cross-valdiation-video"><i class="fa fa-check"></i>Cross Valdiation Video</a></li>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#advantage-of-cross-validation"><i class="fa fa-check"></i>Advantage of cross-validation</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#fold-cross-validation"><i class="fa fa-check"></i><b>2.6</b> 10-fold cross-validation</a><ul>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#exercise-5"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#fold-cross-validation-1"><i class="fa fa-check"></i><b>2.7</b> 5-fold cross-validation</a><ul>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#exercise-6"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="2.8" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#times-5-fold-cross-validation"><i class="fa fa-check"></i><b>2.8</b> <span class="math inline">\(5 \times 5\)</span>-fold cross-validation</a><ul>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#exercise-7"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="2.9" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#making-predictions-on-new-data"><i class="fa fa-check"></i><b>2.9</b> Making predictions on new data</a><ul>
+<li class="chapter" data-level="" data-path="regression-models-fitting-them-and-evaluating-their-performance.html"><a href="regression-models-fitting-them-and-evaluating-their-performance.html#exercise-8"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html"><i class="fa fa-check"></i><b>3</b> Classification models: fitting them and evaluating their performance</a><ul>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#logistic-regression-on-sonar-video"><i class="fa fa-check"></i>Logistic regression on sonar video</a></li>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#why-a-traintest-split"><i class="fa fa-check"></i>Why a train/test split?</a></li>
+<li class="chapter" data-level="3.1" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#try-a-6040-split"><i class="fa fa-check"></i><b>3.1</b> Try a 60/40 split</a><ul>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#exercise-9"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#fit-a-logistic-regression-model"><i class="fa fa-check"></i><b>3.2</b> Fit a logistic regression model</a><ul>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#exercise-10"><i class="fa fa-check"></i>Exercise</a></li>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#confusion-matrix-video"><i class="fa fa-check"></i>Confusion matrix video</a></li>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#confusion-matrix"><i class="fa fa-check"></i>Confusion Matrix</a></li>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#confusion-matrix-takeaways"><i class="fa fa-check"></i>Confusion matrix takeaways</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#calculate-a-confusion-matrix"><i class="fa fa-check"></i><b>3.3</b> Calculate a confusion matrix</a><ul>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#exercise-11"><i class="fa fa-check"></i>Exercise</a></li>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#exercise-12"><i class="fa fa-check"></i>Exercise</a></li>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#class-probabilities-and-predictions-video"><i class="fa fa-check"></i>Class probabilities and predictions video</a></li>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#exercise-13"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#try-another-threshold"><i class="fa fa-check"></i><b>3.4</b> Try another threshold</a></li>
+<li class="chapter" data-level="3.5" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#from-probabilites-to-confusion-matrix"><i class="fa fa-check"></i><b>3.5</b> From probabilites to confusion matrix</a><ul>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#introducing-the-roc-curve-video"><i class="fa fa-check"></i>Introducing the ROC curve video</a></li>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#whats-the-value-of-a-roc-curve"><i class="fa fa-check"></i>What’s the value of a ROC curve?</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#plot-an-roc-curve"><i class="fa fa-check"></i><b>3.6</b> Plot an ROC curve</a><ul>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#exercise-14"><i class="fa fa-check"></i>Exercise</a></li>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#area-under-the-curve-auc-video"><i class="fa fa-check"></i>Area under the curve (AUC) video</a></li>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#model-roc-and-auc"><i class="fa fa-check"></i>Model, ROC, and AUC</a></li>
+</ul></li>
+<li class="chapter" data-level="3.7" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#customizing-traincontrol"><i class="fa fa-check"></i><b>3.7</b> Customizing <code>trainControl</code></a><ul>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#exercise-15"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="3.8" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#using-custom-traincontrol"><i class="fa fa-check"></i><b>3.8</b> Using custom <code>trainControl</code></a><ul>
+<li class="chapter" data-level="" data-path="classification-models-fitting-them-and-evaluating-their-performance.html"><a href="classification-models-fitting-them-and-evaluating-their-performance.html#exercise-16"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html"><i class="fa fa-check"></i><b>4</b> Tuning model parameters to improve performance</a><ul>
+<li class="chapter" data-level="" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#random-forests-and-wine-video"><i class="fa fa-check"></i>Random forests and wine video</a></li>
+<li class="chapter" data-level="" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#random-forests-vs.linear-models"><i class="fa fa-check"></i>Random forests vs. linear models</a></li>
+<li class="chapter" data-level="4.1" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#fit-a-random-forest"><i class="fa fa-check"></i><b>4.1</b> Fit a random forest</a><ul>
+<li class="chapter" data-level="" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#exercise-17"><i class="fa fa-check"></i>Exercise</a></li>
+<li class="chapter" data-level="" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#explore-a-wider-model-space-video"><i class="fa fa-check"></i>Explore a wider model space video</a></li>
+<li class="chapter" data-level="" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#advantage-of-a-longer-tune-length"><i class="fa fa-check"></i>Advantage of a longer tune length</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#try-a-longer-tune-length"><i class="fa fa-check"></i><b>4.2</b> Try a longer tune length</a><ul>
+<li class="chapter" data-level="" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#exercise-18"><i class="fa fa-check"></i>Exercise</a></li>
+<li class="chapter" data-level="" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#custom-tuning-grids-video"><i class="fa fa-check"></i>Custom tuning grids video</a></li>
+<li class="chapter" data-level="" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#advantages-of-a-custom-tuning-grid"><i class="fa fa-check"></i>Advantages of a custom tuning grid</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#fit-a-random-forest-with-custom-tuning"><i class="fa fa-check"></i><b>4.3</b> Fit a random forest with custom tuning</a><ul>
+<li class="chapter" data-level="" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#exercise-19"><i class="fa fa-check"></i>Exercise</a></li>
+<li><a href="tuning-model-parameters-to-improve-performance.html#introducing-glmnet-video">Introducing <code>glmnet</code> video</a></li>
+<li><a href="tuning-model-parameters-to-improve-performance.html#advantage-of-glmnet">Advantage of <code>glmnet</code></a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#make-a-custom-traincontrol"><i class="fa fa-check"></i><b>4.4</b> Make a custom <code>trainControl</code></a><ul>
+<li class="chapter" data-level="" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#exercise-20"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#fit-glmnet-with-custom-traincontrol"><i class="fa fa-check"></i><b>4.5</b> Fit glmnet with custom <code>trainControl</code></a><ul>
+<li class="chapter" data-level="" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#exercise-21"><i class="fa fa-check"></i>Exercise</a></li>
+<li><a href="tuning-model-parameters-to-improve-performance.html#glmnet-with-custom-tuning-grid-video"><code>glmnet</code> with custom tuning grid video</a></li>
+<li class="chapter" data-level="" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#why-a-custom-tuning-grid"><i class="fa fa-check"></i>Why a custom tuning grid?</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#glmnet-with-custom-traincontrol-and-tuning"><i class="fa fa-check"></i><b>4.6</b> <code>glmnet</code> with custom <code>trainControl</code> and tuning</a><ul>
+<li class="chapter" data-level="" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#exercise-22"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="tuning-model-parameters-to-improve-performance.html"><a href="tuning-model-parameters-to-improve-performance.html#interpreting-glmnet-plots"><i class="fa fa-check"></i><b>4.7</b> Interpreting <code>glmnet</code> plots</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html"><i class="fa fa-check"></i><b>5</b> Preprocessing your data</a><ul>
+<li class="chapter" data-level="" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#median-imputation-video"><i class="fa fa-check"></i>Median imputation video</a></li>
+<li class="chapter" data-level="" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#median-imputation-vs.omitting-rows"><i class="fa fa-check"></i>Median imputation vs. omitting rows</a></li>
+<li class="chapter" data-level="5.1" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#apply-median-imputation"><i class="fa fa-check"></i><b>5.1</b> Apply median imputation</a><ul>
+<li class="chapter" data-level="" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#exercise-23"><i class="fa fa-check"></i>Exercise</a></li>
+<li class="chapter" data-level="" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#comparing-knn-imputation-to-median-imputation"><i class="fa fa-check"></i>Comparing KNN imputation to median imputation</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#use-knn-imputation"><i class="fa fa-check"></i><b>5.2</b> Use KNN imputation</a><ul>
+<li class="chapter" data-level="" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#exercise-24"><i class="fa fa-check"></i>Exercise</a></li>
+<li class="chapter" data-level="" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#compare-knn-and-median-imputation"><i class="fa fa-check"></i>Compare KNN and median imputation</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#multiple-preprocessing-methods"><i class="fa fa-check"></i>Multiple preprocessing methods</a></li>
+<li class="chapter" data-level="" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#order-of-operations"><i class="fa fa-check"></i>Order of operations</a></li>
+<li class="chapter" data-level="5.3" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#combining-preprocessing-methods"><i class="fa fa-check"></i><b>5.3</b> Combining preprocessing methods</a><ul>
+<li class="chapter" data-level="" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#exercise-25"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#handling-low-information-predictors-video"><i class="fa fa-check"></i>Handling low information predictors video</a></li>
+<li class="chapter" data-level="" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#why-remove-near-zero-variance-predictors"><i class="fa fa-check"></i>Why remove near zero variance predictors?</a></li>
+<li class="chapter" data-level="5.4" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#remove-near-zero-variance-predictors"><i class="fa fa-check"></i><b>5.4</b> Remove near zero variance predictors</a><ul>
+<li class="chapter" data-level="" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#exercise-26"><i class="fa fa-check"></i>Exercise</a></li>
+<li class="chapter" data-level="5.4.1" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#preprocess-and-nearzerovar"><i class="fa fa-check"></i><b>5.4.1</b> <code>preProcess()</code> and <code>nearZeroVar()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#fit-model-on-reduced-blood-brain-data"><i class="fa fa-check"></i><b>5.5</b> Fit model on reduced blood-brain data</a><ul>
+<li class="chapter" data-level="" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#exercise-27"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#using-pca-as-an-alternative-to-nearzerovar"><i class="fa fa-check"></i><b>5.6</b> Using PCA as an alternative to <code>nearZeroVar()</code></a><ul>
+<li class="chapter" data-level="" data-path="preprocessing-your-data.html"><a href="preprocessing-your-data.html#exercise-28"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html"><i class="fa fa-check"></i><b>6</b> Selecting models: a case study in churn prediction</a><ul>
+<li><a href="selecting-models-a-case-study-in-churn-prediction.html#reusing-a-traincontrol-video">Reusing a <code>trainControl</code> video</a></li>
+<li><a href="selecting-models-a-case-study-in-churn-prediction.html#why-reuse-a-traincontrol">Why reuse a <code>trainControl</code>?</a></li>
+<li class="chapter" data-level="6.1" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#make-custom-traintest-indices"><i class="fa fa-check"></i><b>6.1</b> Make custom train/test indices</a><ul>
+<li class="chapter" data-level="" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#exercise-29"><i class="fa fa-check"></i>Exercise</a></li>
+<li><a href="selecting-models-a-case-study-in-churn-prediction.html#reintroducing-glmnet-video">Reintroducing <code>glmnet</code> video</a></li>
+<li><a href="selecting-models-a-case-study-in-churn-prediction.html#glmnet-as-a-baseline-model"><code>glmnet</code> as a baseline model</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#fit-the-baseline-model"><i class="fa fa-check"></i><b>6.2</b> Fit the baseline model</a><ul>
+<li class="chapter" data-level="" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#exercise-30"><i class="fa fa-check"></i>Exercise</a></li>
+<li class="chapter" data-level="" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#random-forest-drawback"><i class="fa fa-check"></i>Random forest drawback</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#random-forest-with-custom-traincontrol"><i class="fa fa-check"></i><b>6.3</b> Random forest with custom <code>trainControl</code></a><ul>
+<li class="chapter" data-level="" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#exercise-31"><i class="fa fa-check"></i>Exercise</a></li>
+<li class="chapter" data-level="" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#matching-traintest-indices"><i class="fa fa-check"></i>Matching train/test indices</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#create-a-resamples-object"><i class="fa fa-check"></i><b>6.4</b> Create a resamples object</a><ul>
+<li class="chapter" data-level="" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#exercise-32"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#create-a-box-and-whisker-plot"><i class="fa fa-check"></i><b>6.5</b> Create a box-and-whisker plot</a><ul>
+<li class="chapter" data-level="" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#exercise-33"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#create-a-scatterplot"><i class="fa fa-check"></i><b>6.6</b> Create a scatterplot</a><ul>
+<li class="chapter" data-level="6.6.1" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#exercise-34"><i class="fa fa-check"></i><b>6.6.1</b> Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="6.7" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#ensembling-models"><i class="fa fa-check"></i><b>6.7</b> Ensembling models</a><ul>
+<li class="chapter" data-level="" data-path="selecting-models-a-case-study-in-churn-prediction.html"><a href="selecting-models-a-case-study-in-churn-prediction.html#exercise-35"><i class="fa fa-check"></i>Exercise</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"><a href="https://www.datacamp.com/courses/machine-learning-toolbox">Machine Learning Toolbox</a></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="classification-models-fitting-them-and-evaluating-their-performance" class="section level1">
+<h1><span class="header-section-number">Chapter 3</span> Classification models: fitting them and evaluating their performance</h1>
+<p>In this chapter, you’ll fit classification models with <code>train()</code> and evaluate their out-of-sample performance using cross-validation and area under the curve (AUC).</p>
+<hr />
+<div id="logistic-regression-on-sonar-video" class="section level3 unnumbered">
+<h3>Logistic regression on sonar video</h3>
+<iframe src="https://drive.google.com/file/d/1gKcVviQJ0anNO_iGeo2HIH6L5TTtAm2s/preview" width="740" height="420">
+</iframe>
+<hr />
+</div>
+<div id="why-a-traintest-split" class="section level3 unnumbered">
+<h3>Why a train/test split?</h3>
+<p>What is the point of making a train/test split for binary classification problems?</p>
+<ul>
+<li><p>To make the problem harder for the model by reducing the dataset size.</p></li>
+<li><p><strong>To evaluate your models out-of-sample, on new data.</strong></p></li>
+<li><p>To reduce the dataset size, so your models fit faster.</p></li>
+<li><p>There is no real reason; it is no different than evaluating your models in-sample.</p></li>
+</ul>
+<hr />
+</div>
+<div id="try-a-6040-split" class="section level2">
+<h2><span class="header-section-number">3.1</span> Try a 60/40 split</h2>
+<p>As you saw in the video, you’ll be working with the <code>Sonar</code> dataset in this chapter, using a 60% training set and a 40% test set. We’ll practice making a train/test split one more time, just to be sure you have the hang of it. Recall that you can use the <code>sample()</code> function to get a random permutation of the row indices in a dataset, to use when making train/test splits, e.g.:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rows &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="kw">nrow</span>(my_data))</code></pre></div>
+<p>And then use those row indices to randomly reorder the dataset, e.g.:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_data &lt;-<span class="st"> </span>my_data[rows, ]</code></pre></div>
+<p>Once your dataset is randomly ordered, you can split off the first 60% as a training set and the last 40% as a test set.</p>
+<hr />
+<div id="exercise-9" class="section level3 unnumbered">
+<h3>Exercise</h3>
+<ul>
+<li>Shuffle the row indices of <code>Sonar</code> and store the result in <code>rows</code>.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(mlbench)
+<span class="kw">data</span>(Sonar)
+<span class="co"># Shuffle row indices: rows</span>
+<span class="kw">set.seed</span>(<span class="dv">421</span>)
+rows &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="kw">nrow</span>(Sonar))</code></pre></div>
+<ul>
+<li>Use <code>rows</code> to randomly reorder the rows of <code>Sonar</code>.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Randomly order data</span>
+Sonar &lt;-<span class="st"> </span>Sonar[rows, ]</code></pre></div>
+<ul>
+<li>Identify the proper row to split on for a 60/40 split. Store this row number as <code>split</code>.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Identify row to split on: split</span>
+split &lt;-<span class="st"> </span><span class="kw">round</span>(<span class="kw">nrow</span>(Sonar)<span class="op">*</span>.<span class="dv">60</span>, <span class="dv">0</span>)
+split</code></pre></div>
+<pre><code>[1] 125</code></pre>
+<ul>
+<li>Save the first 60% as a training set.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Create train</span>
+train &lt;-<span class="st"> </span>Sonar[<span class="dv">1</span><span class="op">:</span>split, ]</code></pre></div>
+<ul>
+<li>Save the last 40% as the test set.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Create test</span>
+test &lt;-<span class="st"> </span>Sonar[(split<span class="op">+</span><span class="dv">1</span>)<span class="op">:</span><span class="kw">nrow</span>(Sonar), ]</code></pre></div>
+<hr />
+</div>
+</div>
+<div id="fit-a-logistic-regression-model" class="section level2">
+<h2><span class="header-section-number">3.2</span> Fit a logistic regression model</h2>
+<p>Once you have your random training and test sets you can fit a logistic regression model to your training set using the <code>glm()</code> function. <code>glm()</code> is a more advanced version of <code>lm()</code> that allows for more varied types of regression models, aside from plain vanilla ordinary least squares regression.</p>
+<p>Be sure to pass the argument <code>family = &quot;binomial&quot;</code> to <code>glm()</code> to specify that you want to do logistic (rather than linear) regression. For example:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">glm</span>(Target <span class="op">~</span><span class="st"> </span>., <span class="dt">family =</span> <span class="st">&quot;binomial&quot;</span>, dataset)</code></pre></div>
+<p>Don’t worry about warnings like</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">glm.fit<span class="op">:</span><span class="st"> </span>algorithm did not converge or glm.fit<span class="op">:</span><span class="st"> </span>fitted probabilities numerically <span class="dv">0</span> or <span class="dv">1</span> occurred</code></pre></div>
+<p>These are common on smaller datasets and usually don’t cause any issues. They typically mean your dataset is perfectly separable, which can cause problems for the math behind the model, but R’s <code>glm()</code> function is almost always robust enough to handle this case with no problems.</p>
+<p>Once you have a <code>glm()</code> model fit to your dataset, you can predict the outcome (e.g. rock or mine) on the test set using the <code>predict()</code> function with the argument <code>type = &quot;response&quot;</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">predict</span>(my_model, test, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)</code></pre></div>
+<hr />
+<div id="exercise-10" class="section level3 unnumbered">
+<h3>Exercise</h3>
+<ul>
+<li>Fit a logistic regression called <code>model</code> to predict <code>Class</code> using all other variables as predictors. Use the training set for <code>Sonar</code>.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Fit glm model: model</span>
+model &lt;-<span class="st"> </span><span class="kw">glm</span>(Class <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> train, <span class="dt">family =</span> <span class="st">&quot;binomial&quot;</span>)</code></pre></div>
+<pre><code>Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<ul>
+<li>Predict on the <code>test</code> set using that model. Call the result <code>p</code> like you’ve done before.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Predict on test: p</span>
+p &lt;-<span class="st"> </span><span class="kw">predict</span>(model, <span class="dt">newdata =</span> test, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)</code></pre></div>
+<hr />
+</div>
+<div id="confusion-matrix-video" class="section level3 unnumbered">
+<h3>Confusion matrix video</h3>
+<iframe src="https://drive.google.com/file/d/1pOQPX3vhFra2WE_c01T4-Q9crVu2Aq3b/preview" width="740" height="420">
+</iframe>
+<hr />
+</div>
+<div id="confusion-matrix" class="section level3 unnumbered">
+<h3>Confusion Matrix</h3>
+<p>See <a href="https://en.wikipedia.org/wiki/Confusion_matrix" class="uri">https://en.wikipedia.org/wiki/Confusion_matrix</a> for a table and formulas.</p>
+</div>
+<div id="confusion-matrix-takeaways" class="section level3 unnumbered">
+<h3>Confusion matrix takeaways</h3>
+<p>What information does a confusion matrix provide?</p>
+<ul>
+<li><p>True positive rates</p></li>
+<li><p>True negative rates</p></li>
+<li><p>False positive rates</p></li>
+<li><p>False negative rates</p></li>
+<li><p><strong>All of the above</strong></p></li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="calculate-a-confusion-matrix" class="section level2">
+<h2><span class="header-section-number">3.3</span> Calculate a confusion matrix</h2>
+<p>As you saw in the video, a confusion matrix is a very useful tool for calibrating the output of a model and examining all possible outcomes of your predictions (true positive, true negative, false positive, false negative).</p>
+<p>Before you make your confusion matrix, you need to “cut” your predicted probabilities at a given threshold to turn probabilities into a factor of class predictions. Combine <code>ifelse()</code> with <code>factor()</code> as follows:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pos_or_neg &lt;-<span class="st"> </span><span class="kw">ifelse</span>(probability_prediction <span class="op">&gt;</span><span class="st"> </span>threshold, positive_class, negative_class)
+p_class &lt;-<span class="st"> </span><span class="kw">factor</span>(pos_or_neg, <span class="dt">levels =</span> <span class="kw">levels</span>(test_values))</code></pre></div>
+<p><code>confusionMatrix()</code> in caret improves on <code>table()</code> from base <code>R</code> by adding lots of useful ancillary statistics in addition to the base rates in the table. You can calculate the confusion matrix (and the associated statistics) using the predicted outcomes as well as the actual outcomes, e.g.:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">confusionMatrix</span>(p_class, test_values)</code></pre></div>
+<hr />
+<div id="exercise-11" class="section level3 unnumbered">
+<h3>Exercise</h3>
+<ul>
+<li>Use <code>ifelse()</code> to create a character vector, <code>m_or_r</code> that is the positive class, <code>&quot;M&quot;</code>, when <code>p</code> is greater than 0.5, and the negative class, <code>&quot;R&quot;</code>, otherwise.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(caret)
+<span class="co"># Calculate class probabilities: p_class</span>
+m_or_r &lt;-<span class="st"> </span><span class="kw">ifelse</span>(p <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.50</span>, <span class="st">&quot;M&quot;</span>, <span class="st">&quot;R&quot;</span>)</code></pre></div>
+<ul>
+<li>Convert <code>m_or_r</code> to be a factor, <code>p_class</code>, with levels the same as those of <code>test[[&quot;Class&quot;]]</code>.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p_class &lt;-<span class="st"> </span><span class="kw">factor</span>(m_or_r, <span class="dt">levels =</span> <span class="kw">levels</span>(test[[<span class="st">&quot;Class&quot;</span>]]))
+<span class="co"># OR</span>
+p_class &lt;-<span class="st"> </span><span class="kw">factor</span>(m_or_r, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;M&quot;</span>, <span class="st">&quot;R&quot;</span>))</code></pre></div>
+<ul>
+<li>Make a confusion matrix with <code>confusionMatrix()</code>, passing <code>p_class</code> and the <code>&quot;Class&quot;</code> column from the <code>test</code> dataset.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Create confusion matrix</span>
+caret<span class="op">::</span><span class="kw">confusionMatrix</span>(p_class, test<span class="op">$</span>Class)</code></pre></div>
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction  M  R
+         M 11 29
+         R 33 10
+                                          
+               Accuracy : 0.253           
+                 95% CI : (0.1639, 0.3604)
+    No Information Rate : 0.5301          
+    P-Value [Acc &gt; NIR] : 1.0000          
+                                          
+                  Kappa : -0.4907         
+                                          
+ Mcnemar&#39;s Test P-Value : 0.7032          
+                                          
+            Sensitivity : 0.2500          
+            Specificity : 0.2564          
+         Pos Pred Value : 0.2750          
+         Neg Pred Value : 0.2326          
+             Prevalence : 0.5301          
+         Detection Rate : 0.1325          
+   Detection Prevalence : 0.4819          
+      Balanced Accuracy : 0.2532          
+                                          
+       &#39;Positive&#39; Class : M               
+                                          </code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Using table()</span>
+<span class="kw">table</span>(p_class, test<span class="op">$</span>Class)</code></pre></div>
+<pre><code>       
+p_class  M  R
+      M 11 29
+      R 33 10</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Using xtabs()</span>
+<span class="kw">xtabs</span>(<span class="op">~</span>p_class <span class="op">+</span><span class="st"> </span>test<span class="op">$</span>Class)</code></pre></div>
+<pre><code>       test$Class
+p_class  M  R
+      M 11 29
+      R 33 10</code></pre>
+<hr />
+</div>
+<div id="exercise-12" class="section level3 unnumbered">
+<h3>Exercise</h3>
+<p>Calculating accuracy—Use <code>confusionMatrix(p_class, test[[&quot;Class&quot;]])</code> to calculate a confusion matrix on the test set.</p>
+<ul>
+<li>What is the test set accuracy of this model (rounded to the nearest percent)?</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">RES &lt;-<span class="st"> </span>caret<span class="op">::</span><span class="kw">confusionMatrix</span>(p_class, test[[<span class="st">&quot;Class&quot;</span>]])
+RES</code></pre></div>
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction  M  R
+         M 11 29
+         R 33 10
+                                          
+               Accuracy : 0.253           
+                 95% CI : (0.1639, 0.3604)
+    No Information Rate : 0.5301          
+    P-Value [Acc &gt; NIR] : 1.0000          
+                                          
+                  Kappa : -0.4907         
+                                          
+ Mcnemar&#39;s Test P-Value : 0.7032          
+                                          
+            Sensitivity : 0.2500          
+            Specificity : 0.2564          
+         Pos Pred Value : 0.2750          
+         Neg Pred Value : 0.2326          
+             Prevalence : 0.5301          
+         Detection Rate : 0.1325          
+   Detection Prevalence : 0.4819          
+      Balanced Accuracy : 0.2532          
+                                          
+       &#39;Positive&#39; Class : M               
+                                          </code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">RES<span class="op">$</span>overall[<span class="dv">1</span>]</code></pre></div>
+<pre><code>Accuracy 
+0.253012 </code></pre>
+<p>The accuracy of this model is 25.3%.</p>
+<ul>
+<li>What is the test set true positive rate (or sensitivity) of this model (rounded to the nearest percent)?</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Sens &lt;-<span class="st"> </span><span class="kw">round</span>(RES[[<span class="dv">4</span>]][<span class="st">&quot;Sensitivity&quot;</span>]<span class="op">*</span><span class="dv">100</span>, <span class="dv">1</span>)
+Sens</code></pre></div>
+<pre><code>Sensitivity 
+         25 </code></pre>
+<p>The test set sensitivity of this model is 25%.</p>
+<ul>
+<li>What is the test set true negative rate (or specificity) of this model (rounded to the nearest percent)?</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Spec &lt;-<span class="st"> </span><span class="kw">round</span>(RES[[<span class="dv">4</span>]][<span class="st">&quot;Specificity&quot;</span>]<span class="op">*</span><span class="dv">100</span>, <span class="dv">1</span>)
+Spec</code></pre></div>
+<pre><code>Specificity 
+       25.6 </code></pre>
+<p>The test set specificity of this model is 25.6%.</p>
+<hr />
+</div>
+<div id="class-probabilities-and-predictions-video" class="section level3 unnumbered">
+<h3>Class probabilities and predictions video</h3>
+<iframe src="https://drive.google.com/file/d/1H4RIf9wWoYAYbrqDWcJjPfzRSgwNJjyp/preview" width="740" height="420">
+</iframe>
+<hr />
+</div>
+<div id="exercise-13" class="section level3 unnumbered">
+<h3>Exercise</h3>
+<p>Probabilities and classes—What’s the relationship between the predicted probabilities and the predicted classes?</p>
+<ul>
+<li><p>You determine the predicted probabilities by looking at the average accuracy of the predicted classes.</p></li>
+<li><p>There is no relationship; they’re completely different things.</p></li>
+<li><p><strong>Predicted classes are based off of predicted probabilities plus a classification threshold.</strong></p></li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="try-another-threshold" class="section level2">
+<h2><span class="header-section-number">3.4</span> Try another threshold</h2>
+<p>In the previous exercises, you used a threshold of 0.50 to cut your predicted probabilities to make class predictions (rock vs mine). However, this classification threshold does not always align with the goals for a given modeling problem.</p>
+<p>For example, pretend you want to identify the objects you are really certain are mines. In this case, you might want to use a probability threshold of 0.90 to get fewer predicted mines, but with greater confidence in each prediction.</p>
+<ul>
+<li>Use <code>ifelse()</code> to create a character vector, <code>m_or_r</code> that is the positive class, <code>&quot;M&quot;</code>, when <code>p</code> is greater than 0.9, and the negative class, <code>&quot;R&quot;</code>, otherwise.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Apply threshold of 0.9</span>
+m_or_r &lt;-<span class="st"> </span><span class="kw">ifelse</span>(p <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.90</span>, <span class="st">&quot;M&quot;</span>, <span class="st">&quot;R&quot;</span>)</code></pre></div>
+<ul>
+<li>Convert <code>m_or_r</code> to be a factor, <code>p_class</code>, with levels the same as those of <code>test[[&quot;Class&quot;]]</code>.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p_class &lt;-<span class="st"> </span><span class="kw">factor</span>(m_or_r, <span class="dt">levels =</span> <span class="kw">levels</span>(test[[<span class="st">&quot;Class&quot;</span>]]))</code></pre></div>
+<ul>
+<li>Make a confusion matrix with <code>confusionMatrix()</code>, passing <code>p_class</code> and the <code>&quot;Class&quot;</code> column from the <code>test</code> dataset.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Create confusion matrix</span>
+<span class="kw">confusionMatrix</span>(p_class, test[[<span class="st">&quot;Class&quot;</span>]])</code></pre></div>
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction  M  R
+         M 10 27
+         R 34 12
+                                          
+               Accuracy : 0.2651          
+                 95% CI : (0.1742, 0.3734)
+    No Information Rate : 0.5301          
+    P-Value [Acc &gt; NIR] : 1.0000          
+                                          
+                  Kappa : -0.4603         
+                                          
+ Mcnemar&#39;s Test P-Value : 0.4424          
+                                          
+            Sensitivity : 0.2273          
+            Specificity : 0.3077          
+         Pos Pred Value : 0.2703          
+         Neg Pred Value : 0.2609          
+             Prevalence : 0.5301          
+         Detection Rate : 0.1205          
+   Detection Prevalence : 0.4458          
+      Balanced Accuracy : 0.2675          
+                                          
+       &#39;Positive&#39; Class : M               
+                                          </code></pre>
+<hr />
+</div>
+<div id="from-probabilites-to-confusion-matrix" class="section level2">
+<h2><span class="header-section-number">3.5</span> From probabilites to confusion matrix</h2>
+<p>Conversely, say you want to be really certain that your model correctly identifies all the mines as mines. In this case, you might use a prediction threshold of 0.10, instead of 0.90.</p>
+<ul>
+<li>Use <code>ifelse()</code> to create a character vector, <code>m_or_r</code> that is the positive class, <code>&quot;M&quot;</code>, when <code>p</code> is greater than 0.1, and the negative class, <code>&quot;R&quot;</code>, otherwise.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Apply threshold of 0.1</span>
+m_or_r &lt;-<span class="st"> </span><span class="kw">ifelse</span>(p <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.10</span>, <span class="st">&quot;M&quot;</span>, <span class="st">&quot;R&quot;</span>)</code></pre></div>
+<ul>
+<li>Convert <code>m_or_r</code> to be a factor, <code>p_class</code>, with levels the same as those of <code>test[[&quot;Class&quot;]]</code>.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p_class &lt;-<span class="st"> </span><span class="kw">factor</span>(m_or_r, <span class="dt">levels =</span> <span class="kw">levels</span>(test[[<span class="st">&quot;Class&quot;</span>]]))</code></pre></div>
+<ul>
+<li>Make a confusion matrix with <code>confusionMatrix()</code>, passing <code>p_class</code> and the <code>&quot;Class&quot;</code> column from the <code>test</code> dataset.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Create confusion matrix</span>
+<span class="kw">confusionMatrix</span>(p_class, test[[<span class="st">&quot;Class&quot;</span>]])</code></pre></div>
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction  M  R
+         M 11 30
+         R 33  9
+                                          
+               Accuracy : 0.241           
+                 95% CI : (0.1538, 0.3473)
+    No Information Rate : 0.5301          
+    P-Value [Acc &gt; NIR] : 1.0000          
+                                          
+                  Kappa : -0.517          
+                                          
+ Mcnemar&#39;s Test P-Value : 0.8011          
+                                          
+            Sensitivity : 0.2500          
+            Specificity : 0.2308          
+         Pos Pred Value : 0.2683          
+         Neg Pred Value : 0.2143          
+             Prevalence : 0.5301          
+         Detection Rate : 0.1325          
+   Detection Prevalence : 0.4940          
+      Balanced Accuracy : 0.2404          
+                                          
+       &#39;Positive&#39; Class : M               
+                                          </code></pre>
+<hr />
+<div id="introducing-the-roc-curve-video" class="section level3 unnumbered">
+<h3>Introducing the ROC curve video</h3>
+<iframe src="https://drive.google.com/file/d/1_PFAItyY9onprgOSxqT1dnM1aXjf4luj/preview" width="740" height="420">
+</iframe>
+<hr />
+</div>
+<div id="whats-the-value-of-a-roc-curve" class="section level3 unnumbered">
+<h3>What’s the value of a ROC curve?</h3>
+<p>What is the primary value of an ROC curve?</p>
+<ul>
+<li><p>It has a cool acronym.</p></li>
+<li><p>It can be used to determine the true positive and false positive rates for a particular classification threshold.</p></li>
+<li><p><strong>It evaluates all possible thresholds for splitting predicted probabilities into predicted classes.</strong></p></li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="plot-an-roc-curve" class="section level2">
+<h2><span class="header-section-number">3.6</span> Plot an ROC curve</h2>
+<p>As you saw in the video, an ROC curve is a really useful shortcut for summarizing the performance of a classifier over all possible thresholds. This saves you a lot of tedious work computing class predictions for many different thresholds and examining the confusion matrix for each.</p>
+<p>My favorite package for computing ROC curves is <code>caTools</code> written by <span class="citation">Tuszynski (<a href="#ref-R-caTools">2019</a>)</span>, which contains a function called <code>colAUC()</code>. This function is very user-friendly and can actually calculate ROC curves for multiple predictors at once. In this case, you only need to calculate the ROC curve for one predictor, e.g.:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">colAUC</span>(predicted_probabilities, actual, <span class="dt">plotROC =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<p>The function will return a score called AUC (more on that later) and the <code>plotROC = TRUE</code> argument will return the plot of the ROC curve for visual inspection.</p>
+<hr />
+<div id="exercise-14" class="section level3 unnumbered">
+<h3>Exercise</h3>
+<ul>
+<li>Predict probabilities (i.e. <code>type = &quot;response&quot;</code>) on the <code>test</code> set, then store the result as <code>p</code>.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(caTools)
+<span class="co"># Predict on test: p</span>
+p &lt;-<span class="st"> </span><span class="kw">predict</span>(model, <span class="dt">newdata =</span> test, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)</code></pre></div>
+<ul>
+<li>Make an ROC curve using the predicted test set probabilities.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">colAUC</span>(p, test<span class="op">$</span>Class, <span class="dt">plotROC =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<p><img src="MachineLearningToolboxSC_files/figure-html/unnamed-chunk-67-1.png" width="384" style="display: block; margin: auto;" /></p>
+<pre><code>             [,1]
+M vs. R 0.7645688</code></pre>
+<hr />
+</div>
+<div id="area-under-the-curve-auc-video" class="section level3 unnumbered">
+<h3>Area under the curve (AUC) video</h3>
+<iframe src="https://drive.google.com/file/d/1dclr-xNIvsgMeKLTrIR9nPzrhQiVED21/preview" width="740" height="420">
+</iframe>
+<hr />
+</div>
+<div id="model-roc-and-auc" class="section level3 unnumbered">
+<h3>Model, ROC, and AUC</h3>
+<p>What is the AUC of a perfect model?</p>
+<ul>
+<li><p>0.00</p></li>
+<li><p>0.50</p></li>
+<li><p><strong>1.00</strong></p></li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="customizing-traincontrol" class="section level2">
+<h2><span class="header-section-number">3.7</span> Customizing <code>trainControl</code></h2>
+<p>As you saw in the video, area under the ROC curve is a very useful, single-number summary of a model’s ability to discriminate the positive from the negative class (e.g. mines from rocks). An AUC of 0.5 is no better than random guessing, an AUC of 1.0 is a perfectly predictive model, and an AUC of 0.0 is perfectly anti-predictive (which rarely happens).</p>
+<p>This is often a much more useful metric than simply ranking models by their accuracy at a set threshold, as different models might require different calibration steps (looking at a confusion matrix at each step) to find the optimal classification threshold for that model.</p>
+<p>You can use the <code>trainControl()</code> function in <code>caret</code> to use AUC (instead of accuracy), to tune the parameters of your models. The <code>twoClassSummary()</code> convenience function allows you to do this easily.</p>
+<p>When using <code>twoClassSummary()</code>, be sure to always include the argument <code>classProbs = TRUE</code> or your model will throw an error! (You cannot calculate AUC with just class predictions. You need to have class probabilities as well.)</p>
+<hr />
+<div id="exercise-15" class="section level3 unnumbered">
+<h3>Exercise</h3>
+<ul>
+<li><p>Customize the <code>trainControl</code> object to use <code>twoClassSummary</code> rather than <code>defaultSummary</code>.</p></li>
+<li><p>Use 10-fold cross-validation.</p></li>
+<li><p>Be sure to tell <code>trainControl()</code>to return class probabilities.</p></li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Create trainControl object: myControl</span>
+myControl &lt;-<span class="st"> </span><span class="kw">trainControl</span>(
+  <span class="dt">method =</span> <span class="st">&quot;cv&quot;</span>,
+  <span class="dt">number =</span> <span class="dv">10</span>,
+  <span class="dt">summaryFunction =</span> twoClassSummary,
+  <span class="dt">classProbs =</span> <span class="ot">TRUE</span>, <span class="co"># IMPORTANT!</span>
+  <span class="dt">verboseIter =</span> <span class="ot">FALSE</span>
+)</code></pre></div>
+<hr />
+</div>
+</div>
+<div id="using-custom-traincontrol" class="section level2">
+<h2><span class="header-section-number">3.8</span> Using custom <code>trainControl</code></h2>
+<p>Now that you have a custom <code>trainControl</code> object, it’s easy to fit caret models that use AUC rather than accuracy to tune and evaluate the model. You can just pass your custom <code>trainControl</code> object to the <code>train()</code> function via the <code>trControl</code> argument, e.g.:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">train</span>(<span class="op">&lt;</span>standard arguments here<span class="op">&gt;</span>, <span class="dt">trControl =</span> myControl)</code></pre></div>
+<p>This syntax gives you a convenient way to store a lot of custom modeling parameters and then use them across multiple different calls to <code>train()</code>. You will make extensive use of this trick in Chapter 5.</p>
+<hr />
+<div id="exercise-16" class="section level3 unnumbered">
+<h3>Exercise</h3>
+<ul>
+<li>Use <code>train()</code> to fit a glm model (i.e. <code>method = &quot;glm&quot;</code>) to <code>Sonar</code> using your custom <code>trainControl</code> object, <code>myControl</code>. You want to predict <code>Class</code> from all other variables in the data (i.e. <code>Class ~ .</code>). Save the result to <code>model</code>.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Train glm with custom trainControl: model</span>
+model &lt;-<span class="st"> </span><span class="kw">train</span>(Class <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> Sonar, 
+               <span class="dt">method =</span> <span class="st">&quot;glm&quot;</span>, 
+               <span class="dt">trControl =</span> myControl)</code></pre></div>
+<ul>
+<li>Print the <code>model</code> to the console and examine its output.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Print model to console</span>
+model</code></pre></div>
+<pre><code>Generalized Linear Model 
+
+208 samples
+ 60 predictor
+  2 classes: &#39;M&#39;, &#39;R&#39; 
+
+No pre-processing
+Resampling: Cross-Validated (10 fold) 
+Summary of sample sizes: 187, 187, 187, 187, 187, 187, ... 
+Resampling results:
+
+  ROC       Sens       Spec     
+  0.726835  0.7462121  0.6633333</code></pre>
+<hr />
+
+</div>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-R-caTools">
+<p>Tuszynski, Jarek. 2019. <em>CaTools: Tools: Moving Window Statistics, Gif, Base64, Roc Auc, Etc.</em> <a href="https://CRAN.R-project.org/package=caTools" class="uri">https://CRAN.R-project.org/package=caTools</a>.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="regression-models-fitting-them-and-evaluating-their-performance.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="tuning-model-parameters-to-improve-performance.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["MachineLearningToolboxSC.pdf", "MachineLearningToolboxSC.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
